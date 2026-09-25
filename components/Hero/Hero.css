@@ -1,0 +1,263 @@
+/* ─── Aceternity Hero Parallax Styles: Ideate X Palette ─── */
+.hero-parallax-wrapper {
+  position: relative;
+  height: 120vh;
+  min-height: 980px;
+  padding: 0 0 60px 0;
+  overflow: hidden;
+  background-color: var(--bg-primary, #0a0d14);
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.hero-parallax-header {
+  position: relative;
+  max-width: var(--max-width, 1440px);
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(120px, 14vh, 160px) var(--container-padding, 5vw) 24px var(--container-padding, 5vw);
+  z-index: 20;
+  box-sizing: border-box;
+}
+
+.hero-parallax-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  background: rgba(0, 141, 228, 0.08);
+  border: 1px solid rgba(0, 141, 228, 0.25);
+  margin-bottom: 14px;
+}
+
+.hero-parallax-badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--accent, #008DE4);
+  box-shadow: 0 0 10px var(--accent, #008DE4);
+}
+
+.hero-parallax-badge-text {
+  font-size: 0.725rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent, #008DE4);
+}
+
+.hero-parallax-title {
+  font-family: var(--font-heading, inherit);
+  font-size: clamp(2.5rem, 5.5vw, 4.75rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
+  max-width: 900px;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  text-transform: none;
+}
+
+.hero-parallax-title .accent {
+  background: var(--gradient-brand, linear-gradient(135deg, #FF5733, #FBB040, #008DE4));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-parallax-desc {
+  max-width: 640px;
+  font-size: clamp(0.95rem, 1.15vw, 1.15rem);
+  color: var(--text-body, #94a3b8);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.hero-parallax-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+.hero-parallax-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.hero-parallax-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--accent, #008DE4);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.hero-parallax-grid {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  pointer-events: auto;
+  margin-top: 0;
+}
+
+.hero-parallax-row {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+  will-change: transform;
+}
+
+.hero-parallax-row-reverse {
+  flex-direction: row-reverse;
+}
+
+.hero-parallax-card {
+  position: relative;
+  width: 450px;
+  height: 280px;
+  border-radius: 16px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #0d111d;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transform-origin: center center;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+}
+
+.hero-parallax-card:hover {
+  border-color: rgba(0, 141, 228, 0.6);
+  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.75), 0 0 30px rgba(0, 141, 228, 0.25);
+}
+
+.hero-parallax-card-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #0b0e18;
+}
+
+.hero-parallax-card-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(0.96) contrast(1.04);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+}
+
+.hero-parallax-card:hover .hero-parallax-card-img {
+  transform: scale(1.05);
+  filter: brightness(1.06);
+}
+
+.hero-parallax-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.88) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+  z-index: 10;
+}
+
+.hero-parallax-card:hover .hero-parallax-card-overlay {
+  opacity: 1;
+}
+
+.hero-parallax-card-title {
+  font-family: var(--font-heading, inherit);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.hero-parallax-card-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 18px;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.78) 0%, transparent 100%);
+  z-index: 5;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.hero-parallax-card:hover .hero-parallax-card-bottom {
+  opacity: 0;
+}
+
+.hero-parallax-card-bottom-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 1024px) {
+  .hero-parallax-card {
+    width: 380px;
+    height: 240px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-parallax-wrapper {
+    height: auto;
+    min-height: 100vh;
+    padding: 0 0 50px 0;
+  }
+
+  .hero-parallax-header {
+    padding: clamp(90px, 12vh, 115px) var(--container-padding, 5vw) 16px var(--container-padding, 5vw);
+  }
+
+  .hero-parallax-card {
+    width: 300px;
+    height: 190px;
+    border-radius: 12px;
+  }
+
+  .hero-parallax-grid {
+    gap: 16px;
+  }
+
+  .hero-parallax-row {
+    gap: 16px;
+  }
+}

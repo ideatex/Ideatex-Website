@@ -1,0 +1,95 @@
+/* TechStackDock Styles */
+
+.tech-stack-dock-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: var(--space-xl);
+  position: relative;
+}
+
+.tech-stack-category-pills {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: var(--space-sm);
+  z-index: 10;
+}
+
+.tech-stack-category-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+.tech-stack-category-pill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(0, 141, 228, 0.4);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.tech-stack-category-pill.active {
+  background: rgba(0, 141, 228, 0.15);
+  border-color: var(--accent);
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(0, 141, 228, 0.25);
+}
+
+.tech-stack-pill-count {
+  font-size: 0.6875rem;
+  font-family: var(--font-mono, monospace);
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--accent);
+}
+
+.tech-stack-dock-stage {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0 1rem;
+}
+
+.tech-stack-labels-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-width: 860px;
+  margin-top: var(--space-sm);
+}
+
+.tech-stack-tag-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.78125rem;
+  font-family: var(--font-mono, monospace);
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.tech-stack-tag-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(0, 141, 228, 0.3);
+  color: #ffffff;
+}

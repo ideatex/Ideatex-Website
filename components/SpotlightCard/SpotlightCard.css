@@ -1,0 +1,126 @@
+/* ─── Spotlight Card ─── */
+.card-spotlight {
+  position: relative;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  padding: 2rem;
+  overflow: hidden;
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+  --spotlight-color: rgba(0, 141, 228, 0.18);
+  transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-spotlight:hover {
+  border-color: rgba(0, 141, 228, 0.45);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 0 25px rgba(0, 141, 228, 0.12);
+  transform: translateY(-3px);
+}
+
+.card-spotlight::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle 350px at var(--mouse-x) var(--mouse-y), rgba(0, 141, 228, 0.16) 0%, rgba(251, 176, 64, 0.08) 40%, rgba(255, 87, 51, 0.04) 70%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.card-spotlight:hover::before,
+.card-spotlight:focus-within::before {
+  opacity: 1;
+}
+
+.card-spotlight > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── Card Type Variants ─── */
+
+/* Service Card */
+.card-spotlight.service-card-spotlight {
+  padding: 0;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-spotlight.service-card-spotlight::before {
+  opacity: 0;
+  background: radial-gradient(circle 300px at var(--mouse-x) var(--mouse-y), rgba(0, 141, 228, 0.18) 0%, rgba(251, 176, 64, 0.08) 45%, transparent 100%);
+}
+
+.card-spotlight.service-card-spotlight:hover::before,
+.card-spotlight.service-card-spotlight:focus-within::before {
+  opacity: 1;
+}
+
+/* Portfolio Card */
+.card-spotlight.portfolio-card-spotlight {
+  padding: 0;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-spotlight.portfolio-card-spotlight::before {
+  opacity: 0;
+  background: radial-gradient(circle 300px at var(--mouse-x) var(--mouse-y), rgba(0, 141, 228, 0.15) 0%, rgba(255, 87, 51, 0.06) 50%, transparent 100%);
+}
+
+.card-spotlight.portfolio-card-spotlight:hover::before,
+.card-spotlight.portfolio-card-spotlight:focus-within::before {
+  opacity: 0.8;
+}
+
+/* Team Card */
+.card-spotlight.team-card-spotlight {
+  padding: 0;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-spotlight.team-card-spotlight::before {
+  opacity: 0;
+  background: radial-gradient(circle 300px at var(--mouse-x) var(--mouse-y), rgba(0, 141, 228, 0.16) 0%, rgba(251, 176, 64, 0.08) 50%, transparent 100%);
+}
+
+.card-spotlight.team-card-spotlight:hover::before,
+.card-spotlight.team-card-spotlight:focus-within::before {
+  opacity: 0.8;
+}
+
+/* Blog Card */
+.card-spotlight.home-blog-card-spotlight {
+  padding: 0;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-spotlight.home-blog-card-spotlight::before {
+  opacity: 0;
+  background: radial-gradient(circle 300px at var(--mouse-x) var(--mouse-y), rgba(0, 141, 228, 0.18) 0%, rgba(251, 176, 64, 0.08) 45%, transparent 100%);
+}
+
+.card-spotlight.home-blog-card-spotlight:hover::before,
+.card-spotlight.home-blog-card-spotlight:focus-within::before {
+  opacity: 1;
+}
+

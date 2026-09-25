@@ -1,0 +1,245 @@
+/* ─── About 11: Sticky Narrative & Drawn Timeline Rail (React Bits Pro) ─── */
+
+.about11-section {
+  position: relative;
+  width: 100%;
+  padding: var(--space-3xl) 0;
+  background: #080b12;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.about11-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  gap: clamp(40px, 6vw, 80px);
+  align-items: start;
+  position: relative;
+}
+
+/* ─── Left Sticky Narrative Column ─── */
+.about11-sticky-col {
+  position: sticky;
+  top: 110px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.about11-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent, #008de4);
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(0, 141, 228, 0.08);
+  border: 1px solid rgba(0, 141, 228, 0.2);
+}
+
+.about11-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.2rem, 3.8vw, 3.2rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.about11-title .accent-gradient {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.about11-narrative {
+  font-size: 1.05rem;
+  color: var(--text-body);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ─── Right Column: Drawn Timeline Rail with Milestone Chapters ─── */
+.about11-timeline-col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding-left: 44px;
+}
+
+/* Drawn Timeline Rail Container */
+.about11-rail-wrapper {
+  position: absolute;
+  left: 14px;
+  top: 24px;
+  bottom: 24px;
+  width: 2px;
+  z-index: 1;
+}
+
+.about11-rail-track {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+}
+
+.about11-rail-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--accent, #008de4) 0%, #00c6ff 100%);
+  box-shadow: 0 0 12px rgba(0, 141, 228, 0.5);
+  border-radius: 2px;
+}
+
+/* Milestone Chapters List */
+.about11-chapters-list {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  position: relative;
+  z-index: 2;
+}
+
+.about11-chapter {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Milestone Chapter Node on Rail */
+.about11-node {
+  position: absolute;
+  left: -44px;
+  top: 22px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(1px);
+  z-index: 3;
+}
+
+.about11-node-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid var(--accent, #008de4);
+  box-shadow: 0 0 10px rgba(0, 141, 228, 0.7);
+  transition: all 0.3s ease;
+}
+
+.about11-chapter:hover .about11-node-dot {
+  background: var(--accent, #008de4);
+  box-shadow: 0 0 16px rgba(0, 141, 228, 0.9);
+  transform: scale(1.25);
+}
+
+/* Milestone Chapter Card */
+.about11-chapter-card {
+  position: relative;
+  background: rgba(14, 18, 28, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 26px 24px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.about11-chapter-card:hover {
+  border-color: rgba(0, 141, 228, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 141, 228, 0.08);
+}
+
+.about11-chapter-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.about11-chapter-number {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--accent, #008de4);
+  letter-spacing: 0.1em;
+}
+
+.about11-chapter-divider {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 0.75rem;
+}
+
+.about11-chapter-phase {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.about11-chapter-title {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 10px 0 8px 0;
+  letter-spacing: -0.01em;
+}
+
+.about11-chapter-desc {
+  font-size: 0.9375rem;
+  color: var(--text-body);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ─── Responsive Adjustments ─── */
+@media (max-width: 992px) {
+  .about11-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .about11-sticky-col {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .about11-timeline-col {
+    padding-left: 32px;
+  }
+
+  .about11-rail-wrapper {
+    left: 8px;
+  }
+
+  .about11-node {
+    left: -32px;
+    transform: translateX(0);
+  }
+
+  .about11-chapter-card {
+    padding: 20px 18px;
+  }
+
+  .about11-chapter-title {
+    font-size: 1.1rem;
+  }
+}

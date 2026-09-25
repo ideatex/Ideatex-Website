@@ -1,0 +1,47 @@
+.marquee-section {
+  padding: var(--space-lg) 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  overflow: hidden;
+  background-color: var(--bg-surface);
+}
+
+.marquee-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.marquee-container::before,
+.marquee-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100px;
+  z-index: 1;
+}
+
+.marquee-container::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg-surface), transparent);
+}
+
+.marquee-container::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg-surface), transparent);
+}
+
+.marquee-item {
+  font-family: var(--font-heading);
+  font-size: clamp(1.125rem, 1.5vw, 1.5rem);
+  font-weight: 700;
+  color: var(--text-white);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.marquee-separator {
+  color: var(--accent);
+  margin: 0 var(--space-lg);
+  font-size: 0.75rem;
+}

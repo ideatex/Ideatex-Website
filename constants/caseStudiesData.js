@@ -1,0 +1,498 @@
+export const CASE_STUDIES = [
+  {
+    slug: "tifbox",
+    aliases: ["tifbox-food-delivery", "tifbox-mobile-app", "tifboxmeals"],
+    number: "01",
+    title: "Tifbox Food Delivery Mobile App",
+    subtitle: "A location-aware food delivery and subscription mobile app connecting customers with verified cloud kitchens, tiffin vendors, and automated dispatch.",
+    category: "FoodTech · Mobile App",
+    client: "Tifbox Meals",
+    year: "2024",
+    duration: "10 Weeks",
+    role: "Mobile App Architecture, UX Engineering & Full-Stack",
+    image: "/case-studies/Tifbox - CS.png",
+    coverBanner: "/case-studies/Tifbox - CS.png",
+    summary: "Tifbox Meals is a mobile-first food delivery and recurring tiffin platform built to connect users with hyper-local cloud kitchens and home-style meal providers.\n\nThe mobile application allows customers to discover verified kitchens within a customized distance radius (1km - 4km), filter by dietary choices (Pure Veg, Vegan, Home-style North Indian), customize lunch and dinner subscriptions, and order directly via in-app checkout or instant WhatsApp and phone channels.\n\nBehind the intuitive mobile interface, Ideate X engineered an end-to-end operational engine uniting food vendors, daily preparation manifests, and geo-fenced last-mile delivery.",
+    challenge: "Home-style meal deliveries and daily tiffins require distinct capabilities compared to generic on-demand fast food.\n\nCustomers need transparent pricing, dietary verifications, flexible lunch/dinner pause-and-resume schedules, and immediate contact with local chefs. Kitchens need organized daily batching queues, while delivery partners require geo-optimized routing without operational bottlenecks.",
+    challengePoints: [
+      "Empowering users to discover verified local cloud kitchens within adjustable distance radiuses (1km - 4km).",
+      "Providing granular meal plan customization, dietary filters (Pure Veg, Vegan), and flexible pause/resume scheduling.",
+      "Enabling direct omni-channel ordering through in-app checkout, instant WhatsApp messaging, and direct phone calls.",
+      "Synchronizing recurring meal subscriptions with real-time kitchen preparation manifests and driver dispatch.",
+    ],
+    approach: "We architected an offline-resilient, mobile-first React Native / PWA application backed by a high-concurrency cloud backend, geo-radius discovery algorithms, automated subscription billing, and multi-portal operational synchronization.",
+    architecturePoints: [
+      "Location-aware kitchen discovery engine calculating live distance radiuses and delivery feasibility in milliseconds.",
+      "Dynamic subscription management engine supporting daily cutoff rules, flexible pause/resume schedules, and instant meal swaps.",
+      "Omni-channel order routing bridging digital in-app cart transactions with automated WhatsApp and phone escalation triggers.",
+      "Real-time kitchen dashboard and automated driver dispatch optimizing batch delivery manifests.",
+    ],
+    techStack: [
+      { name: "React Native / PWA", category: "Mobile App" },
+      { name: "React / Next.js", category: "Web Platform" },
+      { name: "Node.js", category: "API Services" },
+      { name: "PostgreSQL", category: "Database" },
+      { name: "Supabase", category: "Real-Time & Auth" },
+      { name: "WhatsApp API", category: "Direct Messaging" },
+    ],
+    keyFeatures: [
+      {
+        title: "Home-Style Kitchen Discovery",
+        description: "Geo-fenced discovery engine allowing users to explore verified local tiffin centers and cloud kitchens with distance radius filters from 1km to 4km.",
+      },
+      {
+        title: "Dietary & Menu Filtering",
+        description: "Granular filters for Pure Veg, Vegan, North Indian, and Home-Style cuisines with transparent operating hours, meal tray breakdowns, and pricing.",
+      },
+      {
+        title: "Omni-Channel Ordering & WhatsApp Rails",
+        description: "Flexible ordering workflows enabling users to place in-app orders, make direct inquiries via WhatsApp, or call kitchen operators directly.",
+      },
+      {
+        title: "Daily Lunch & Dinner Subscriptions",
+        description: "Recurring meal scheduling with one-tap pause, resume, and meal-type customization matching user schedules.",
+      },
+      {
+        title: "Vendor Manifest & Dispatch Integration",
+        description: "Automated preparation queues for cloud kitchens and geo-optimized delivery batching for last-mile delivery partners.",
+      },
+    ],
+    metrics: [
+      { value: "1km - 4km", label: "Radius Engine", desc: "Hyper-local kitchen matching and distance-based discovery" },
+      { value: "100%", label: "Omni-Channel", desc: "Seamless in-app, WhatsApp, and phone order placement" },
+      { value: "Real-Time", label: "Live Manifests", desc: "Instant kitchen preparation queues from subscription states" },
+      { value: "0 Friction", label: "Flexible Scheduling", desc: "Seamless pause, resume, and meal plan customization" },
+    ],
+    outcome: "The Tifbox Mobile App provides a seamless, transparent bridge between local home chefs, verified cloud kitchens, and hungry customers, transforming fragmented tiffin operations into a scalable digital ecosystem.",
+    tags: [
+      "Mobile app development",
+      "Food delivery app",
+      "Geo-radius discovery",
+      "Cloud kitchen ecosystem",
+      "WhatsApp order integration",
+      "Subscription meal engine",
+    ],
+    ctaHeading: "Building a food delivery or subscription mobile app?",
+    ctaText: "Let's engineer a high-performance mobile platform tailored to your workflows.",
+  },
+  {
+    slug: "csava",
+    aliases: ["csava-association-platform"],
+    number: "02",
+    title: "CSAVA Association Management Platform",
+    subtitle: "Moving membership, events and financial operations from paperwork to one connected platform.",
+    category: "Association Management",
+    client: "CSAVA",
+    year: "2024",
+    duration: "12 Weeks",
+    role: "Enterprise Platform Architecture & Full-Stack",
+    image: "/case-studies/CSAVA - CS.png",
+    coverBanner: "/case-studies/CSAVA - CS.png",
+    summary: "The Chennai Small Animal Veterinary Association (CSAVA) needed to modernize processes that had traditionally depended on offline registers, manual verification and disconnected financial records.\n\nIdeate X developed a centralized digital platform that brought membership management, event registration, accreditation, billing and executive administration into a unified system.",
+    challenge: "The existing operational model relied heavily on:\n\n• Paper-based membership processes\n• Manual verification\n• Spreadsheet-based accreditation\n• Manual payment checks\n• Physical event queues\n• Disconnected financial records\n\nThe goal was not simply to digitize individual tasks. The platform needed to connect the complete membership and event lifecycle.",
+    challengePoints: [
+      "Paper-based membership applications and manual physical verification causing significant delays.",
+      "Spreadsheet-based accreditation prone to human errors and record discrepancies.",
+      "Manual payment validation resulting in delayed receipts and difficult bank reconciliations.",
+      "Long physical delegate queues at annual veterinary congresses due to manual badge verification.",
+      "Disconnected financial records preventing association executives from obtaining unified operational insights.",
+    ],
+    approach: "We designed a centralized digital operating model uniting member onboarding, credential issuance, tiered congress registration, and GST-compliant automated invoicing with executive governance dashboards.",
+    architecturePoints: [
+      "Centralized member lifecycle engine automating qualification verification and digital credential issuance.",
+      "Congress & event management module with tier-based pricing, custom coupons, and digital QR verification.",
+      "Automated billing system supporting GST-compliant invoices, renewal reminders, and payment reconciliation.",
+      "Executive administration workflows providing association leaders with complete operational and financial visibility.",
+    ],
+    techStack: [
+      { name: "Next.js", category: "Application Shell" },
+      { name: "PostgreSQL", category: "Database" },
+      { name: "Supabase", category: "Auth & Real-Time" },
+      { name: "Node.js", category: "API Services" },
+      { name: "GST Engine", category: "Financial Compliance" },
+      { name: "QR Accreditation", category: "Event Security" },
+    ],
+    keyFeatures: [
+      {
+        title: "Digital Membership Management",
+        description: "Member onboarding, qualification verification, tier upgrades, and digital credential issuance brought into a centralized workflow.",
+      },
+      {
+        title: "Event Management",
+        description: "The platform handles congress registration, customized offers, and coupon-based event management with digital delegate verification.",
+      },
+      {
+        title: "Automated Billing",
+        description: "GST-compliant invoice generation, recurring renewals, and payment reconciliation seamlessly integrated into the platform.",
+      },
+      {
+        title: "Executive Administration",
+        description: "Dedicated administration workflows provide association leaders with centralized visibility over operations, members, and finances.",
+      },
+    ],
+    metrics: [
+      { value: "85%", label: "Faster Verification", desc: "Membership verification became 85% faster" },
+      { value: "100%", label: "Audit Compliance", desc: "Conference and CPD billing achieved 100% audit compliance" },
+      { value: "0 Queues", label: "On-Site Check-In", desc: "Digital delegate verification removed on-site physical queues" },
+      { value: "Real-Time", label: "Financial Governance", desc: "Financial governance moved to a unified real-time dashboard" },
+    ],
+    outcome: "CSAVA moved from fragmented administrative processes toward a centralized digital operating model covering membership, events and financial governance.",
+    tags: [
+      "Membership management",
+      "Event management",
+      "Digital accreditation",
+      "GST billing",
+      "Payment reconciliation",
+      "Executive dashboards",
+      "Automated workflows",
+    ],
+    ctaHeading: "Still running important operations on spreadsheets and paperwork?",
+    ctaText: "Let's build a better system.",
+  },
+  {
+    slug: "real-estate",
+    aliases: ["keyo", "real-estate-leasing"],
+    number: "03",
+    title: "Real Estate Leasing & Tenancy Engine",
+    subtitle: "A multi-sided property platform connecting owners, brokers, tenants and field teams.",
+    category: "PropTech",
+    client: "Keyo / PropTech",
+    year: "2024",
+    duration: "14 Weeks",
+    role: "PropTech Architecture, PWA & Full-Stack",
+    image: "/case-studies/Keyo - CS.png",
+    coverBanner: "/case-studies/Keyo - CS.png",
+    summary: "Real estate transactions involve more than property listings. They require coordination between property owners, brokers, tenants, inspection teams, agreements, payments and disputes.\n\nIdeate X built a multi-sided PropTech platform designed to connect these roles through a structured transaction workflow.",
+    challenge: "The platform needed to support several independent roles while maintaining control over sensitive property and transaction workflows.\n\nThe system had to coordinate:\n• Property owners\n• Certified brokers\n• Tenants\n• Inspection staff\n• Property verification\n• Digital agreements\n• Advance payments\n• Rent payments\n• Dispute resolution",
+    challengePoints: [
+      "Coordinating multi-sided interactions across property owners, certified brokers, tenants, and inspection teams.",
+      "Eliminating fraudulent listings with verifiable on-ground field inspection and geo-tagged photo audits.",
+      "Accelerating tenancy agreements with secure, legally compliant in-app digital signature workflows.",
+      "Managing complex token reservations, recurring rental collections, security deposits, and automated payout splits.",
+    ],
+    approach: "We architected a unified PropTech transaction engine with dedicated role-based portals, on-ground inspection mobile workflows, in-platform digital lease execution, and automated escrow rails for advance tokens and rent.",
+    architecturePoints: [
+      "Multi-role architecture with strict data isolation for owners, brokers, tenants, and field agents.",
+      "Mobile-optimized inspection tool with offline capability, geo-tagged photography, and condition checklists.",
+      "Secure digital agreement signing engine with cryptographic audit trails and instant PDF lease issuance.",
+      "Escrow and payment engine handling advance token reservations, recurring rent, deposits, and split disbursements.",
+    ],
+    techStack: [
+      { name: "Next.js", category: "Web Platform" },
+      { name: "PWA / WebAPK", category: "Mobile Inspections" },
+      { name: "Prisma ORM", category: "Data Layer" },
+      { name: "PostgreSQL", category: "Database" },
+      { name: "Firebase", category: "Realtime & Notifications" },
+      { name: "Escrow Engine", category: "Payments" },
+    ],
+    keyFeatures: [
+      {
+        title: "Property Owner Portal",
+        description: "Owners can manage direct listings, track tenant inquiries, review inspection reports, and monitor property activity.",
+      },
+      {
+        title: "Broker Platform",
+        description: "Certified brokers operate through a dedicated membership-based workflow with listing co-brokering and commission tracking.",
+      },
+      {
+        title: "Tenant Experience",
+        description: "Tenants can discover verified properties, schedule visits, sign digital leases, and manage advance and rental payments.",
+      },
+      {
+        title: "Field Inspection",
+        description: "On-ground teams use dedicated workflows for property inspections, geo-tagged photographs, condition checks and report submissions.",
+      },
+      {
+        title: "Digital Agreements",
+        description: "Tenancy agreements can be securely signed within the platform, reducing the time required to complete transactions.",
+      },
+      {
+        title: "Token & Rent Escrow",
+        description: "The platform supports advance token reservations, recurring rent payments, security deposits and automated payout splits.",
+      },
+    ],
+    metrics: [
+      { value: "6 Roles", label: "Connected Ecosystem", desc: "Owners, brokers, tenants, field teams, and admins on one platform" },
+      { value: "100%", label: "Digital Agreements", desc: "In-platform binding lease execution with legal audit trails" },
+      { value: "Geo-Tagged", label: "Field Audits", desc: "Tamper-proof on-ground inspection reports with GPS photos" },
+      { value: "Automated", label: "Escrow Splits", desc: "Token reservations, deposit protection, and rent disbursements" },
+    ],
+    outcome: "The platform connects property discovery, verification, agreements and payments into a single transaction ecosystem.",
+    tags: [
+      "Multi-role architecture",
+      "Property listings",
+      "Broker management",
+      "Tenant workflows",
+      "Field inspections",
+      "Digital agreements",
+      "Token reservations",
+      "Rent payments",
+      "Escrow workflows",
+      "Automated payouts",
+    ],
+    ctaHeading: "Have a complex property workflow?",
+    ctaText: "Let's turn it into a connected platform.",
+  },
+  {
+    slug: "fintech",
+    aliases: ["369", "fintech-investment-platform"],
+    number: "04",
+    title: "FinTech Investment Platform",
+    subtitle: "A financial platform engineered around complex investment structures, commission logic and transaction ledgers.",
+    category: "FinTech",
+    client: "369 FinTech",
+    year: "2024",
+    duration: "12 Weeks",
+    role: "Financial Systems Architecture & Full-Stack",
+    image: "/case-studies/369 - CS.png",
+    coverBanner: "/case-studies/369 - CS.png",
+    summary: "This platform was designed for a high-volume investment environment where portfolio management, multi-level commission structures, automated payouts and financial records had to operate together.\n\nThe system was built around high-concurrency calculations, audit-oriented transaction records and configurable business rules.",
+    challenge: "The platform needed to handle complex financial relationships and calculations without losing visibility across transactions.\n\nKey requirements included:\n• Multi-level investment structures\n• Dynamic commission rules\n• Tier progression\n• Automated disbursements\n• Financial statements\n• Transaction auditing\n• Investor-specific business rules",
+    challengePoints: [
+      "Multi-level sponsor hierarchies requiring real-time volume calculation and dynamic tier progression.",
+      "Configurable referral percentages and automated dividend calculations across deep network trees.",
+      "Scheduled disbursements and withholding-tax deductions requiring zero-downtime execution accuracy.",
+      "Maintaining an immutable, double-entry financial ledger and audit-oriented earnings statements.",
+      "Structuring investor experiences around unique client business rules rather than generic templates.",
+    ],
+    approach: "We engineered a high-concurrency financial calculation and ledger engine with an interactive hierarchical tree visualizer, dynamic multi-level commission rules, automated tax-compliant payout queues, and investor reporting.",
+    architecturePoints: [
+      "High-speed hierarchical tree engine traversing multi-tier sponsor networks and calculating dynamic business volume.",
+      "Configurable commission engine processing multi-level referral percentages and automated dividend distributions.",
+      "Immutable double-entry transaction ledger generating real-time financial statements and tax deductions.",
+      "Automated payout scheduler with batch transaction validation and banking rails integration.",
+    ],
+    techStack: [
+      { name: "Next.js", category: "Application Shell" },
+      { name: "Prisma ORM", category: "Data Layer" },
+      { name: "PostgreSQL", category: "Ledger Database" },
+      { name: "Redis", category: "High-Speed Cache" },
+      { name: "Node.js", category: "Calculation Services" },
+      { name: "Tailwind CSS", category: "Dashboard UI" },
+    ],
+    keyFeatures: [
+      {
+        title: "Hierarchical Tree Engine",
+        description: "The platform visualizes multi-level sponsor networks and tracks investment volume across the hierarchy. The system also supports real-time tier progression and business-volume-based ranking.",
+      },
+      {
+        title: "Commission Engine",
+        description: "Configurable referral percentages and automated dividend calculations allow commission rules to be applied across multiple levels.",
+      },
+      {
+        title: "Automated Payouts",
+        description: "Scheduled disbursements and withholding-tax calculations support automated financial operations.",
+      },
+      {
+        title: "Financial Ledger",
+        description: "The platform maintains an audit-oriented transaction ledger with financial statements and member earnings information.",
+      },
+      {
+        title: "Custom Investor Module",
+        description: "The investor experience was structured around the client's specific business rules rather than forcing the operation into a generic financial workflow.",
+      },
+    ],
+    metrics: [
+      { value: "Multi-Tier", label: "Tree Visualizer", desc: "Live sponsor network tree and business volume tracking" },
+      { value: "100%", label: "Audit Ledger", desc: "Double-entry transaction records and earnings statements" },
+      { value: "Automated", label: "Payout Engine", desc: "Scheduled disbursements with dynamic tax withholding calculations" },
+      { value: "Custom", label: "Business Logic", desc: "Configurable referral percentages and tier ranking engine" },
+    ],
+    outcome: "The resulting platform brings investment relationships, commission calculations, financial reporting and payout workflows into one system.",
+    tags: [
+      "Investment management",
+      "Hierarchical network engine",
+      "Multi-level commission logic",
+      "Automated payouts",
+      "Financial ledger",
+      "Earnings statements",
+      "Financial reporting",
+      "Custom business rules",
+    ],
+    ctaHeading: "Complex financial logic shouldn't live in spreadsheets.",
+    ctaText: "Let's engineer the system around your business rules.",
+  },
+  {
+    slug: "sami-v-landmarks",
+    aliases: ["sami-v-landmarks-hotel-booking", "hotel-booking", "samivlandmarks"],
+    number: "05",
+    title: "Sami V Landmarks — Hotel Booking Management System",
+    subtitle: "A streamlined hotel booking platform built to simplify reservations and day-to-day property operations.",
+    category: "Hospitality",
+    client: "Sami V Landmarks",
+    year: "2024",
+    duration: "10 Weeks",
+    role: "Hotel Booking Platform Architecture & Full-Stack",
+    image: "/case-studies/Sami V Landmarks - CS.png",
+    coverBanner: "/case-studies/Sami V Landmarks - CS.png",
+    summary: "Sami V Landmarks needed a dedicated digital system to manage hotel bookings and provide a smoother reservation experience for customers. Ideate X developed a hotel booking management system that brings the booking process into one structured platform.",
+    challenge: "Managing hotel reservations efficiently requires clear visibility into room availability, bookings and customer information. The system needed to simplify the reservation process while giving the hotel team a centralized way to manage bookings.",
+    challengePoints: [
+      "Lack of centralized real-time visibility into room inventory and booking status across property units.",
+      "Need for a simplified, transparent online reservation experience for guests.",
+      "Operational friction in managing reservation modifications, check-ins, and room scheduling.",
+      "Difficulty in maintaining organized customer profiles and historical reservation records.",
+    ],
+    approach: "We engineered a centralized hotel booking and reservation management platform uniting customer-facing booking workflows with front-desk room availability controls and centralized guest record management.",
+    architecturePoints: [
+      "Centralized booking engine managing reservation workflows, booking statuses, and date availability.",
+      "Intuitive customer booking experience allowing seamless room discovery and instant reservation requests.",
+      "Room inventory and availability management dashboard with real-time status visibility.",
+      "Unified customer management database organizing ongoing, upcoming, and past guest records.",
+    ],
+    techStack: [
+      { name: "Next.js", category: "Application Shell" },
+      { name: "React", category: "Interactive UI" },
+      { name: "Node.js", category: "API Services" },
+      { name: "PostgreSQL", category: "Database" },
+      { name: "Tailwind CSS", category: "Styling" },
+      { name: "Booking Engine", category: "Reservation Logic" },
+    ],
+    keyFeatures: [
+      {
+        title: "Hotel Booking Management System",
+        description: "A centralized platform designed to manage the complete booking workflow.",
+      },
+      {
+        title: "Online Booking Experience",
+        description: "Customers can browse available rooms and make reservations through a simple digital booking experience.",
+      },
+      {
+        title: "Room & Availability Management",
+        description: "The system provides the hotel team with better visibility of room availability and booking status.",
+      },
+      {
+        title: "Booking Management",
+        description: "Hotel staff can manage reservations and maintain booking information from a centralized interface.",
+      },
+      {
+        title: "Customer Management",
+        description: "Customer and reservation details are organized within the platform, making it easier to manage ongoing and upcoming bookings.",
+      },
+    ],
+    metrics: [
+      { value: "100%", label: "Centralized Platform", desc: "Complete booking workflow managed in one structured system" },
+      { value: "Real-Time", label: "Availability View", desc: "Clear visibility into room availability and booking status" },
+      { value: "0 Friction", label: "Online Reservations", desc: "Simple digital booking experience for hotel guests" },
+      { value: "Organized", label: "Customer Records", desc: "Structured guest details for ongoing and upcoming stays" },
+    ],
+    outcome: "The system gives Sami V Landmarks a structured digital foundation for managing hotel reservations while making the booking experience simpler for customers.",
+    tags: [
+      "Hotel booking management",
+      "Online reservations",
+      "Room availability management",
+      "Centralized booking records",
+      "Customer information management",
+      "Streamlined reservation workflow",
+    ],
+    ctaHeading: "Looking to build a custom booking or reservation platform?",
+    ctaText: "Let's turn your property workflows into a seamless digital system.",
+  },
+  {
+    slug: "srinivas-packaging",
+    aliases: ["srinivas-packaging-industries", "carton-box-manufacturers", "srinivaspackaging"],
+    number: "06",
+    title: "Srinivas Packaging — B2B Manufacturing & Custom Packaging Platform",
+    subtitle: "A modern digital platform and custom quotation engine built for corrugated carton box manufacturing and industrial supply.",
+    category: "Manufacturing",
+    client: "Srinivas Packaging Industries",
+    year: "2024",
+    duration: "8 Weeks",
+    role: "B2B Platform Architecture, UX Engineering & Catalogue System",
+    image: "/case-studies/Srinivas Packaging - CS.png",
+    coverBanner: "/case-studies/Srinivas Packaging - CS.png",
+    summary: "Srinivas Packaging Industries is a prominent manufacturer and supplier of corrugated carton boxes, heavy-duty industrial shipping containers, and premium multi-color duplex cartons.\n\nTo modernize their client acquisition and streamline B2B inquiries from manufacturing plants, e-commerce businesses, and FMCG distributors, Ideate X engineered a high-performance digital platform featuring an interactive product catalogue and custom quotation workflow.",
+    challenge: "Industrial packaging procurement involves technical specifications — box dimensions, ply layers (3-ply, 5-ply, 7-ply), bursting strength, and custom offset printing requirements.\n\nTraditional offline inquiries and phone-based orders caused delays in price estimations and limited outreach to enterprise procurement managers seeking certified packaging manufacturers.",
+    challengePoints: [
+      "High-friction manual enquiry processes for custom box dimensions, ply thickness, and GSM requirements.",
+      "Lack of a structured digital product catalogue showcasing offset-printed multi-color duplex cartons and die-cut boxes.",
+      "Need for a high-converting B2B Request-for-Quote (RFQ) workflow to capture exact technical specifications.",
+      "Highlighting testing laboratory infrastructure, quality certifications, and sustainable manufacturing practices online.",
+    ],
+    approach: "We architected a responsive B2B manufacturing web platform with intuitive product categorization, comprehensive technical specification sheets, an interactive RFQ quotation engine, and technical SEO targeting industrial packaging buyers.",
+    architecturePoints: [
+      "Modular Next.js component system optimized for instant page loads and sub-second Core Web Vitals.",
+      "Interactive Request-for-Quote (RFQ) engine with custom dimension inputs, ply selectors, and artwork upload support.",
+      "Product showcase detailing burst factor, edge crush test (ECT) ratings, and offset printing finishes.",
+      "Automated lead dispatch delivering structured technical order specifications directly to the sales estimation desk.",
+    ],
+    techStack: [
+      { name: "Next.js", category: "Application Shell" },
+      { name: "React", category: "Interactive UI" },
+      { name: "Tailwind CSS", category: "Design System" },
+      { name: "Node.js", category: "API Handlers" },
+      { name: "PostgreSQL", category: "Inquiry Database" },
+      { name: "RFQ Engine", category: "Lead Generation" },
+    ],
+    keyFeatures: [
+      {
+        title: "Interactive Packaging Catalogue",
+        description: "Comprehensive showcase of standard corrugated boxes, multi-color duplex cartons, die-cut shipping boxes, and protective packaging materials.",
+      },
+      {
+        title: "Custom RFQ & Quote Generator",
+        description: "Interactive quote request form enabling B2B buyers to submit custom dimensions, ply requirements, quantity tiers, and artwork files for immediate price estimation.",
+      },
+      {
+        title: "Quality & Testing Infrastructure",
+        description: "Technical section detailing quality control, bursting strength testing, moisture resistance, and drop-test compliance.",
+      },
+      {
+        title: "Sustainable Manufacturing",
+        description: "Showcases eco-friendly water-based inks, 100% recyclable kraft papers, automated corrugation lines, and high-capacity monthly output.",
+      },
+      {
+        title: "Direct Industrial Lead Routing",
+        description: "Instant notification system ensuring sales engineers receive structured specification sheets for fast quotation turnaround.",
+      },
+    ],
+    metrics: [
+      { value: "3.5x", label: "Inquiry Volume", desc: "Increase in qualified inbound B2B bulk packaging RFQs" },
+      { value: "< 2 Hrs", label: "Quote Turnaround", desc: "Faster estimation with structured technical dimensions" },
+      { value: "100%", label: "Digital Catalogue", desc: "Complete product range and print specifications available online" },
+      { value: "Top 3", label: "Search Ranking", desc: "Regional search visibility for corrugated packaging manufacturing" },
+    ],
+    outcome: "The digital platform establishes Srinivas Packaging Industries as a modern, reliable industrial packaging partner, transforming traditional offline quote inquiries into a high-velocity digital lead pipeline for enterprise clients.",
+    tags: [
+      "Corrugated packaging",
+      "Carton box manufacturing",
+      "B2B RFQ engine",
+      "Custom duplex cartons",
+      "Industrial catalogue",
+      "Quality testing standards",
+    ],
+    ctaHeading: "Need an industrial platform or custom B2B catalogue?",
+    ctaText: "Let's engineer a high-converting digital system for your manufacturing operations.",
+  },
+];
+
+export const CASE_STUDY_CATEGORIES = [
+  "All",
+  "Food & Logistics",
+  "Association Management",
+  "PropTech",
+  "FinTech",
+  "Hospitality",
+  "Manufacturing",
+];
+
+export function getCaseStudyBySlug(slug) {
+  if (!slug) return undefined;
+  const normalized = slug.toLowerCase().trim();
+  return CASE_STUDIES.find(
+    (study) =>
+      study.slug === normalized ||
+      (study.aliases && study.aliases.includes(normalized))
+  );
+}
+
+export function getAllCaseStudySlugs() {
+  const slugs = [];
+  CASE_STUDIES.forEach((study) => {
+    slugs.push({ slug: study.slug });
+    if (study.aliases) {
+      study.aliases.forEach((alias) => slugs.push({ slug: alias }));
+    }
+  });
+  return slugs;
+}

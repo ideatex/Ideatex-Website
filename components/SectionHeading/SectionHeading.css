@@ -1,0 +1,9 @@
+.section-heading {
+  margin-bottom: var(--space-xl);
+  position: relative;
+}
+
+.section-heading--center {
+  text-align: center;
+}
+

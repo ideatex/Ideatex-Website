@@ -1,0 +1,108 @@
+/* ToolDock Component Styles */
+
+.tool-dock-wrapper {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  container-type: inline-size;
+  padding: 1.5rem 0 2rem;
+  overflow: visible;
+}
+
+.tool-dock-inner {
+  position: relative;
+  width: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: calc(var(--tool-dock-size) * var(--tool-dock-rise) + 2.75rem);
+  overflow: visible;
+}
+
+.tool-dock-tooltip {
+  pointer-events: none;
+  position: absolute;
+  bottom: calc(var(--tool-dock-size) * (1 + var(--tool-dock-rise)) + 0.625rem);
+  left: 0;
+  z-index: 50;
+  white-space: nowrap;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(13, 17, 26, 0.96);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-heading, inherit);
+  color: #ffffff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 141, 228, 0.25);
+  opacity: 0;
+  transition: opacity 0.2s cubic-bezier(0.22, 1, 0.36, 1), translate 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tool-dock-tooltip[data-state="open"] {
+  opacity: 1;
+}
+
+.tool-dock-tooltip-arrow {
+  position: absolute;
+  bottom: -4.5px;
+  left: 50%;
+  margin-left: -4.5px;
+  width: 9px;
+  height: 9px;
+  transform: rotate(45deg);
+  border-right: 1px solid rgba(255, 255, 255, 0.16);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(13, 17, 26, 0.96);
+}
+
+.tool-dock-list {
+  position: relative;
+  display: flex;
+  width: fit-content;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  touch-action: pan-y;
+}
+
+.tool-dock-item {
+  pointer-events: none;
+  position: relative;
+  display: flex;
+}
+
+.tool-dock-motion-box {
+  width: var(--tool-dock-size);
+  height: var(--tool-dock-size);
+  transform-origin: bottom center;
+  will-change: transform;
+  user-select: none;
+}
+
+/* ToolDockTile App-Icon Styling */
+.tool-dock-tile {
+  position: relative;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 23%;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.16), 0 0 0.5px rgba(0, 0, 0, 0.12), 0 8px 20px rgba(0, 0, 0, 0.35);
+  transition: box-shadow 0.2s ease;
+}
+
+.tool-dock-tile::after {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 0%, transparent 100%);
+  box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}

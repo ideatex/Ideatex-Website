@@ -1,0 +1,5 @@
+:root {
+  --sans: var(--font-body, 'Inter', -apple-system, BlinkMacSystemFont, sans-serif);
+  --heading: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
+  --mono: var(--font-mono, 'JetBrains Mono', monospace);
+}

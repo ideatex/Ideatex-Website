@@ -1,0 +1,272 @@
+/* ─── Integrations Component & Tech Avatar Ribbon Styles ─── */
+
+.integrations-root {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 48px 16px;
+}
+
+@media (min-width: 768px) {
+  .integrations-root {
+    padding: 64px 24px;
+  }
+}
+
+.integrations-capsule {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+  max-width: 100%;
+  overflow: visible;
+  padding: 4px;
+}
+
+.integrations-track {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 0;
+  padding: 4px 6px;
+  overflow: visible;
+  position: relative;
+}
+
+.mask-l-from-90 {
+  -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0.4) 0%, rgba(0,0,0,1) 12%, rgba(0,0,0,1) 88%, rgba(0,0,0,0.4) 100%);
+  mask-image: linear-gradient(to right, rgba(0,0,0,0.4) 0%, rgba(0,0,0,1) 12%, rgba(0,0,0,1) 88%, rgba(0,0,0,0.4) 100%);
+}
+
+/* Overlapping Avatar Item & Token */
+.integrations-avatar-item {
+  position: relative;
+  z-index: 1;
+  margin-left: -12px;
+  flex-shrink: 0;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), z-index 0s;
+  outline: none;
+}
+
+.integrations-avatar-item:first-child {
+  margin-left: 0;
+}
+
+.integrations-avatar-item:hover,
+.integrations-avatar-item:focus-visible {
+  z-index: 30 !important;
+  transform: scale(1.15) translateY(-3px);
+}
+
+.integrations-avatar-circle {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  aspect-ratio: 1 / 1;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #090D16;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+@media (min-width: 768px) {
+  .integrations-avatar-circle {
+    width: 58px;
+    height: 58px;
+    min-width: 58px;
+    min-height: 58px;
+  }
+}
+
+.integrations-avatar-item:hover .integrations-avatar-circle,
+.integrations-avatar-item:focus-visible .integrations-avatar-circle {
+  border-color: rgba(0, 141, 228, 0.7);
+  background: #0E1626;
+  box-shadow: 0 8px 24px rgba(0, 141, 228, 0.35), 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+.integrations-avatar-item.is-empty {
+  opacity: 0.3;
+  pointer-events: none;
+  cursor: default;
+}
+
+.integrations-avatar-item.is-empty .integrations-avatar-circle {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  min-height: 38px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  background: transparent;
+  box-shadow: none;
+}
+
+@media (min-width: 768px) {
+  .integrations-avatar-item.is-empty .integrations-avatar-circle {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+.integrations-empty-slot {
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  background: transparent;
+}
+
+/* Icon Centering & Sizing */
+.integrations-icon {
+  width: 22px;
+  height: 22px;
+  max-width: 24px;
+  max-height: 24px;
+  object-fit: contain;
+  display: block;
+  margin: auto;
+  flex-shrink: 0;
+  user-select: none;
+  pointer-events: auto;
+  transition: transform 0.25s ease;
+}
+
+@media (min-width: 768px) {
+  .integrations-icon {
+    width: 26px;
+    height: 26px;
+    max-width: 28px;
+    max-height: 28px;
+  }
+}
+
+.integrations-avatar-item:hover .integrations-icon {
+  transform: scale(1.08);
+}
+
+/* Floating Tooltip */
+.integrations-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  opacity: 0;
+  pointer-events: none;
+  background: #080B11;
+  border: 1px solid rgba(0, 141, 228, 0.4);
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 141, 228, 0.2);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 40;
+}
+
+.integrations-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 4px;
+  border-style: solid;
+  border-color: #080B11 transparent transparent transparent;
+}
+
+.integrations-avatar-item:hover .integrations-tooltip,
+.integrations-avatar-item:focus-visible .integrations-tooltip,
+.relative:hover .integrations-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ─── Tailwind Class Emulation Utilities for Safe Cross-Component Rendering ─── */
+.-space-x-3\.5 > * + * {
+  margin-left: -12px !important;
+}
+
+.-space-x-4 > * + * {
+  margin-left: -14px !important;
+}
+
+.-space-x-3 > * + * {
+  margin-left: -10px !important;
+}
+
+.size-11 {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  aspect-ratio: 1 / 1 !important;
+  flex-shrink: 0 !important;
+}
+
+.size-12 {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
+  aspect-ratio: 1 / 1 !important;
+  flex-shrink: 0 !important;
+}
+
+.size-14 {
+  width: 56px !important;
+  height: 56px !important;
+  min-width: 56px !important;
+  min-height: 56px !important;
+  aspect-ratio: 1 / 1 !important;
+  flex-shrink: 0 !important;
+}
+
+.size-16 {
+  width: 64px !important;
+  height: 64px !important;
+  min-width: 64px !important;
+  min-height: 64px !important;
+  aspect-ratio: 1 / 1 !important;
+  flex-shrink: 0 !important;
+}
+
+.size-5 {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.size-6 {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.bg-secondary {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.bg-card {
+  background-color: #090D16;
+}
