@@ -1,5 +1,6 @@
 "use client";
 import React from 'react';
+import SmartImg from '../SmartImg';
 import { ExternalLink } from 'lucide-react';
 import SpotlightCard from '../SpotlightCard/SpotlightCard';
 import './PortfolioCard.css';
@@ -13,7 +14,7 @@ export default function PortfolioCard({ title, category, image, tags, link, live
     <div className="portfolio-card visible">
       <div className="portfolio-card-image">
         {image ? (
-          <img 
+          <SmartImg sizes="(max-width: 768px) 100vw, 600px" 
             src={image} 
             alt={title} 
             className="portfolio-card-img" 

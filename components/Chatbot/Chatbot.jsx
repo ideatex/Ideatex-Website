@@ -13,12 +13,21 @@ import {
   ExternalLink,
   ChevronDown,
 } from "lucide-react";
+import ThinkingOrb from "./ThinkingOrb";
 import "./Chatbot.css";
+
+const THINK_LABELS = ["Thinking", "Searching", "Analyzing", "Composing"];
+const MIN_THINK_MS = 1300; // keep the orb visible long enough to read as "thinking"
+const DONE_HOLD_MS = 650; // green "Done" resolve before the answer appears
+const WORD_STAGGER_MS = 28;
+const WORD_STAGGER_MAX_MS = 1400;
+
+const wait = (ms) => new Promise((res) => setTimeout(res, ms));
 
 const INITIAL_MESSAGE = {
   id: "msg-init",
   sender: "assistant",
-  text: "Hi! I'm the Ideate X assistant.\n\nI can help you explore our services, answer questions, or figure out what you might need for your project.",
+  text: "Hi! I'm the Ideate X assistant.\n\nI can help you explore our creative production, digital marketing and development services, or work out what your project needs.",
   time: "Just now",
   links: [],
   quickReplies: [
@@ -40,6 +49,9 @@ export default function Chatbot() {
   const [isSubmittingLead, setIsSubmittingLead] = useState(false);
   const [submittedLeadId, setSubmittedLeadId] = useState(null);
   const [showScrollDown, setShowScrollDown] = useState(false);
+  const [thinkIdx, setThinkIdx] = useState(0);
+  const [thinkDone, setThinkDone] = useState(false);
+  const [shakeInput, setShakeInput] = useState(false);
 
   const messagesContainerRef = useRef(null);
   const messagesEndRef = useRef(null);
@@ -70,6 +82,22 @@ export default function Chatbot() {
       setTimeout(() => inputRef.current?.focus(), 150);
     }
   }, [isOpen, messages, isTyping]);
+
+  // Cycle the thinking label while a reply is pending
+  useEffect(() => {
+    if (!isTyping || thinkDone) return undefined;
+    const id = setInterval(() => setThinkIdx((i) => (i + 1) % THINK_LABELS.length), 1150);
+    return () => clearInterval(id);
+  }, [isTyping, thinkDone]);
+
+  // Messages replay their word-by-word reveal only once, never on re-open
+  useEffect(() => {
+    if (isOpen) return undefined;
+    const id = setTimeout(() => {
+      setMessages((prev) => (prev.some((m) => m.animate) ? prev.map((m) => ({ ...m, animate: false })) : prev));
+    }, 0);
+    return () => clearTimeout(id);
+  }, [isOpen]);
 
   // Keyboard shortcut: Escape to close chat
   useEffect(() => {
@@ -104,7 +132,12 @@ export default function Chatbot() {
 
   const sendMessage = async (textToSend, action = null) => {
     const text = (textToSend || inputText).trim();
-    if (!text && !action) return;
+    if (!text && !action) {
+      setShakeInput(true);
+      setTimeout(() => setShakeInput(false), 260);
+      return;
+    }
+    if (isTyping) return;
 
     const userMsgId = `msg-usr-${Date.now()}`;
     const userTime = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -123,7 +156,17 @@ export default function Chatbot() {
     }
 
     setInputText("");
+    setThinkDone(false);
+    setThinkIdx(0);
     setIsTyping(true);
+    const thinkStart = performance.now();
+
+    // Hold the orb for a minimum time, then resolve it to "Done" before showing the reply
+    const settleThinking = async () => {
+      await wait(Math.max(0, MIN_THINK_MS - (performance.now() - thinkStart)));
+      setThinkDone(true);
+      await wait(DONE_HOLD_MS);
+    };
 
     try {
       const res = await fetch("/api/chatbot/message", {
@@ -138,6 +181,7 @@ export default function Chatbot() {
       });
 
       const data = await res.json();
+      await settleThinking();
       const assistantTime = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
       if (data.success) {
@@ -148,6 +192,7 @@ export default function Chatbot() {
             sender: "assistant",
             text: data.text,
             time: assistantTime,
+            animate: true,
             links: data.links || [],
             isReadyForSubmission: data.isReadyForSubmission || false,
             qualificationState: data.qualificationState || null,
@@ -176,6 +221,7 @@ export default function Chatbot() {
       }
     } catch (err) {
       console.error("Chat error:", err);
+      await settleThinking();
       setMessages((prev) => [
         ...prev,
         {
@@ -188,6 +234,7 @@ export default function Chatbot() {
       ]);
     } finally {
       setIsTyping(false);
+      setThinkDone(false);
     }
   };
 
@@ -201,7 +248,7 @@ export default function Chatbot() {
           name: leadData.name || "Website Lead",
           email: leadData.email,
           phone: leadData.phone || "",
-          service: leadData.platform ? `${leadData.platform} Project` : "Custom Software Development",
+          service: leadData.service_label || "General Enquiry",
           project_description: leadData.project_description,
           target_users: leadData.target_users,
           platform: leadData.platform,
@@ -264,6 +311,20 @@ export default function Chatbot() {
     } else {
       sendMessage(chip.text || chip.label);
     }
+  };
+
+  // Splits text into words; new assistant replies fade in word by word
+  const renderWords = (text, animate, counter) => {
+    if (!animate) return text;
+    return text.split(/(\s+)/).map((tok, i) => {
+      if (!tok.trim()) return tok;
+      const delay = Math.min(counter.i++ * WORD_STAGGER_MS, WORD_STAGGER_MAX_MS);
+      return (
+        <span key={i} className="ix-w" style={{ animationDelay: `${delay}ms` }}>
+          {tok}
+        </span>
+      );
+    });
   };
 
   return (
@@ -334,7 +395,10 @@ export default function Chatbot() {
             data-lenis-prevent-wheel="true"
             data-lenis-prevent-touch="true"
           >
-            {messages.map((msg) => (
+            {messages.map((msg) => {
+              const counter = { i: 0 };
+              const animate = !!msg.animate;
+              return (
               <div key={msg.id} className={`ix-msg-row ${msg.sender}`}>
                 <div className="ix-msg-bubble">
                   {msg.text.split("\n").map((para, i) => {
@@ -352,9 +416,9 @@ export default function Chatbot() {
                           <span>
                             {parts.map((part, pIdx) => {
                               if (part.startsWith("**") && part.endsWith("**")) {
-                                return <strong key={pIdx} style={{ color: "#ffffff", fontWeight: 600 }}>{part.slice(2, -2)}</strong>;
+                                return <strong key={pIdx} style={{ color: "#ffffff", fontWeight: 600 }}>{renderWords(part.slice(2, -2), animate, counter)}</strong>;
                               }
-                              return part;
+                              return <React.Fragment key={pIdx}>{renderWords(part, animate, counter)}</React.Fragment>;
                             })}
                           </span>
                         </div>
@@ -367,9 +431,9 @@ export default function Chatbot() {
                       <p key={i}>
                         {parts.map((part, pIdx) => {
                           if (part.startsWith("**") && part.endsWith("**")) {
-                            return <strong key={pIdx} style={{ color: "#ffffff", fontWeight: 600 }}>{part.slice(2, -2)}</strong>;
+                            return <strong key={pIdx} style={{ color: "#ffffff", fontWeight: 600 }}>{renderWords(part.slice(2, -2), animate, counter)}</strong>;
                           }
-                          return part;
+                          return <React.Fragment key={pIdx}>{renderWords(part, animate, counter)}</React.Fragment>;
                         })}
                       </p>
                     );
@@ -448,14 +512,23 @@ export default function Chatbot() {
                 </div>
                 <span className="ix-msg-time">{msg.time}</span>
               </div>
-            ))}
+              );
+            })}
 
             {isTyping && (
               <div className="ix-msg-row assistant">
-                <div className="ix-typing-indicator">
-                  <span className="ix-typing-dot" />
-                  <span className="ix-typing-dot" />
-                  <span className="ix-typing-dot" />
+                <div className="ix-thinking" role="status" aria-live="polite">
+                  <ThinkingOrb size={76} program={thinkIdx % 4} done={thinkDone} />
+                  <span className="ix-think-label" key={thinkDone ? "done" : thinkIdx}>
+                    {thinkDone ? (
+                      <span className="ix-think-done">Done</span>
+                    ) : (
+                      <>
+                        <span>{THINK_LABELS[thinkIdx]}</span>
+                        <span className="ix-think-dots" aria-hidden="true"><i /><i /><i /></span>
+                      </>
+                    )}
+                  </span>
                 </div>
               </div>
             )}
@@ -502,20 +575,24 @@ export default function Chatbot() {
 
           {/* Message Composer */}
           <form className="ix-chat-composer" onSubmit={handleFormSubmit}>
+            <Sparkles size={15} className="ix-composer-spark" aria-hidden="true" />
             <input
               ref={inputRef}
               type="text"
-              className="ix-chat-input"
+              className={`ix-chat-input${shakeInput ? " is-shake" : ""}`}
               placeholder="Ask a question or describe your project..."
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onKeyDown={handleKeyDown}
+              maxLength={300}
+              spellCheck={false}
               aria-label="Chat message"
             />
             <button
               type="submit"
               className="ix-chat-send-btn"
-              disabled={!inputText.trim() || isTyping}
+              data-ready={inputText.trim() ? "" : undefined}
+              disabled={isTyping}
               title="Send Message"
               aria-label="Send Message"
             >

@@ -30,6 +30,16 @@ const defaultNavLegal = [
   { label: 'Cookie policy', to: '/cookie-policy' },
 ];
 
+const ACRONYMS = { ai: 'AI', saas: 'SaaS', api: 'API' };
+
+// Capitalises the first letter of every word in a link label (acronyms keep their casing)
+function titleCase(label = '') {
+  return String(label).replace(/(^|[\s-])([^\s-]+)/g, (_, sep, word) => {
+    const acronym = ACRONYMS[word.toLowerCase()];
+    return sep + (acronym || word.charAt(0).toUpperCase() + word.slice(1));
+  });
+}
+
 export default function Footer() {
   const cms = useCMSData();
 
@@ -64,45 +74,45 @@ export default function Footer() {
         {/* Brand Summary */}
         <div className="footer-brand-summary">
           <div className="footer-logo-wrap">
-            <Logo size={34} showText={true} />
+            <Logo size={48}showText={true} />
           </div>
           <p className="footer-brand-desc">
-            <strong>{legalName}</strong> builds high-performance software, scalable digital platforms, and AI-driven growth systems.
+            <strong>{legalName}</strong> brings creative production, digital marketing and technology together to help businesses create, grow and build with purpose.
           </p>
         </div>
 
         {/* ── 4-column navigation grid ── */}
         <div className="footer-grid">
           <nav className="footer-nav-col" aria-label="Services">
-            <h4 className="footer-col-title">SERVICES</h4>
+            <h4 className="footer-col-title" role="heading" aria-level={2}>SERVICES</h4>
             {navServices.map((link) => (
               <Link key={link.label} href={link.to} className="footer-nav-link">
-                {link.label}
+                {titleCase(link.label)}
               </Link>
             ))}
           </nav>
 
           <nav className="footer-nav-col" aria-label="Company">
-            <h4 className="footer-col-title">COMPANY</h4>
+            <h4 className="footer-col-title" role="heading" aria-level={2}>COMPANY</h4>
             {navCompany.map((link) => (
               <Link key={link.label} href={link.to} className="footer-nav-link">
-                {link.label}
+                {titleCase(link.label)}
               </Link>
             ))}
           </nav>
 
           <nav className="footer-nav-col" aria-label="Legal">
-            <h4 className="footer-col-title">LEGAL</h4>
+            <h4 className="footer-col-title" role="heading" aria-level={2}>LEGAL</h4>
             {navLegal.map((link) => (
               <Link key={link.label} href={link.to} className="footer-nav-link">
-                {link.label}
+                {titleCase(link.label)}
               </Link>
             ))}
           </nav>
 
           {/* Contact column */}
           <div className="footer-contact-col">
-            <h4 className="footer-col-title">CONTACT</h4>
+            <h4 className="footer-col-title" role="heading" aria-level={2}>CONTACT</h4>
             <ul className="footer-contact">
               <li>
                 <span className="footer-contact-label">EMAIL</span>
@@ -147,11 +157,11 @@ export default function Footer() {
           <p>{legalName} &copy; {new Date().getFullYear()}. All rights reserved.</p>
           
           <div className="footer-bottom-legal">
-            <Link href="/privacy" className="footer-bottom-link">Privacy policy</Link>
+            <Link href="/privacy" className="footer-bottom-link">{titleCase('Privacy policy')}</Link>
             <span className="footer-bottom-sep">&bull;</span>
-            <Link href="/terms" className="footer-bottom-link">Terms of service</Link>
+            <Link href="/terms" className="footer-bottom-link">{titleCase('Terms of service')}</Link>
             <span className="footer-bottom-sep">&bull;</span>
-            <Link href="/cookie-policy" className="footer-bottom-link">Cookie policy</Link>
+            <Link href="/cookie-policy" className="footer-bottom-link">{titleCase('Cookie policy')}</Link>
           </div>
 
           <p className="footer-credit">

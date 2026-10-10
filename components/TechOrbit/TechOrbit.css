@@ -1,0 +1,162 @@
+/* Tech stack orbit: copy on the left, logos orbiting on the right (cropped to a quarter) */
+.tech-orbit {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 30rem;
+  padding: var(--space-xl, 48px) 0;
+  overflow: hidden;
+}
+
+.tech-orbit-inner {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+}
+
+/* Left side */
+.tech-orbit-copy {
+  position: relative;
+  width: 50%;
+}
+
+.tech-orbit-title {
+  margin: 0 0 1rem;
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4.2vw, 3.75rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text-white);
+}
+
+.tech-orbit-text {
+  max-width: 32rem;
+  margin: 0 0 1.5rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-body);
+}
+
+.tech-orbit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.tech-orbit-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 24px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #ffffff;
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.tech-orbit-link:hover,
+.tech-orbit-link:focus-visible {
+  border-color: var(--accent);
+  background: rgba(0, 141, 228, 0.1);
+}
+
+/* Right side: the orbit's centre sits on the right edge of the screen */
+.tech-orbit-stage {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 50%;
+  overflow: hidden;
+  /* fade in from the left so the logos blend into the page */
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 22%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 22%);
+}
+
+.tech-orbit-disc {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 50rem;
+  height: 50rem;
+  transform: translateX(50%);
+}
+
+.tech-orbit-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 6rem;
+  height: 6rem;
+  border-radius: 9999px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.tech-orbit-center-icon { width: 3rem; height: 3rem; }
+
+.tech-orbit-ring {
+  position: absolute;
+  border-radius: 9999px;
+  border: 2px dotted rgba(255, 255, 255, 0.14);
+  animation: tech-orbit-spin 12s linear infinite;
+  will-change: transform;
+}
+
+.tech-orbit-icon {
+  position: absolute;
+  display: flex;
+  padding: 0.25rem;
+  border-radius: 9999px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transform: translate(-50%, -50%);
+}
+
+.tech-orbit-glyph { width: 2rem; height: 2rem; }
+
+@keyframes tech-orbit-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Stacked layout on tablets and phones: copy on top, orbit below */
+@media (max-width: 768px) {
+  .tech-orbit {
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 0;
+    padding-bottom: 0;
+  }
+
+  .tech-orbit-copy { width: 100%; }
+
+  .tech-orbit-stage {
+    position: relative;
+    width: 100%;
+    height: 19rem;
+    margin-top: 1.5rem;
+    justify-content: center;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 82%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 82%, transparent 100%);
+  }
+
+  .tech-orbit-disc { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tech-orbit-ring { animation: none; }
+}

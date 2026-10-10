@@ -1,7 +1,7 @@
 export const COMPANY_DETAILS = {
   name: "Ideate X",
   legalName: "Ideate X",
-  tagline: "Software, Products & Digital Growth",
+  tagline: "Apps, Products & Digital Growth",
   email: "hello@ideatex.co.in",
   phones: [
     { display: "+91 8760007900", raw: "+918760007900" },

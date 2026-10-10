@@ -31,3 +31,12 @@
   color: var(--text-headline);
   font-weight: 500;
 }
+
+/* Comfortable tap targets on touch screens */
+@media (pointer: coarse) {
+  .breadcrumb-link {
+    display: inline-block;
+    padding: 10px 2px;
+    margin: -10px -2px;
+  }
+}

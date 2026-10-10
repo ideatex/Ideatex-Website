@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import SmartImg from '../SmartImg';
 import { motion, useInView } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -205,7 +206,7 @@ const ServiceCard = ({ service, index }) => {
     >
       {/* Background Image with Hover Scale */}
       {service.image && (
-        <img
+        <SmartImg sizes="(max-width: 768px) 100vw, 480px"
           src={service.image}
           alt={service.title}
           className="absolute inset-0 w-full h-full object-cover object-center z-0 transition-transform duration-700 ease-out group-hover:scale-110 pointer-events-none"

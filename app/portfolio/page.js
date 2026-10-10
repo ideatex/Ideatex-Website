@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PortfolioCard from '../../components/PortfolioCard/PortfolioCard';
 import CTABanner from '../../components/CTABanner/CTABanner';
+import LogoCloudSwap from '../../components/ui/logo-cloud-swap';
+import FAQAccordion from '../../components/FAQAccordion/FAQAccordion';
+import { PORTFOLIO_FAQS } from '../../constants/pageFaqs';
 import SectionHeading from '../../components/SectionHeading/SectionHeading';
 import PageHero from '../../components/PageHero/PageHero';
 import { IMAGES } from '../../constants/images';
@@ -22,7 +25,7 @@ const projects = [
     title: 'Keyo',
     category: 'Mobile Apps',
     tags: ['Next.js', 'Prisma', 'PostgreSQL', 'Firebase', 'WebAPK', 'PWA'],
-    image: '/clients/Keyo.png',
+    image: '/clients/project-keyo.jpeg',
     link: 'https://keyo.co.in/en',
   },
   {
@@ -36,14 +39,14 @@ const projects = [
     title: 'Sami V Landmarks',
     category: 'Web Applications',
     tags: ['React', 'Next.js', 'Interactive UI', 'PostgreSQL'],
-    image: '/clients/SamiVLandmarks.png',
+    image: '/clients/project-samivlandmarks.jpeg',
     link: 'https://samivlandmarks.in',
   },
   {
     title: 'Tifbox',
     category: 'Mobile Apps',
     tags: ['React Native', 'PWA', 'PostgreSQL', 'WhatsApp API'],
-    image: '/clients/Tifbox.png',
+    image: '/clients/project-tifbox.jpeg',
     link: 'https://tifboxmeals.com',
   },
   {
@@ -57,7 +60,7 @@ const projects = [
     title: 'Srinivas Packaging',
     category: 'Web Applications',
     tags: ['Next.js', 'B2B Portal', 'Product Catalogue', 'Quote Engine'],
-    image: '/clients/SrinivasPackaging.png',
+    image: '/clients/project-srinivaspackaging.jpeg',
     link: 'https://srinivaspackaging.in',
   },
   {
@@ -123,16 +126,16 @@ export default function Portfolio() {
     <main className="portfolio-page">
       <PageHero
         breadcrumb={[{ path: '/', label: 'Home' }, { label: 'Work' }]}
-        title={<>Work that speaks <span className="accent">for itself.</span></>}
-        subtitle="A look at the software, products, applications, and digital experiences we've built for real business needs."
-        backgroundImage="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&h=1080&auto=format&q=80&fit=crop"
+        title={<>Work That Speaks <span className="accent">for Itself.</span></>}
+        subtitle="Explore selected creative projects, digital experiences and software platforms developed around different business needs."
+        backgroundImage="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1920&h=1080&auto=format&q=80&fit=crop"
         widget={
           <div className="hero-widget-glass" style={{ width: '300px', padding: '1.25rem' }}>
             <p style={{ margin: '0 0 8px 0', fontSize: '0.95rem', fontWeight: 600, color: '#ffffff', lineHeight: 1.4 }}>
-              Production Software
+              Real Projects
             </p>
             <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-body)', lineHeight: 1.5 }}>
-              Custom software, web platforms, and mobile apps built for real business needs.
+              Creative work, digital experiences and applications built around real business needs.
             </p>
           </div>
         }
@@ -175,6 +178,10 @@ export default function Portfolio() {
           </motion.div>
         </div>
       </section>
+
+      <LogoCloudSwap />
+
+      <FAQAccordion faqs={PORTFOLIO_FAQS} title="Questions About Our Work" subtitle="What clients usually ask before starting a project with us." />
 
       <CTABanner />
     </main>

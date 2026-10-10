@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import SmartImg from '../../../components/SmartImg';
 import Link from 'next/link';
 import Breadcrumb from '../../../components/Breadcrumb/Breadcrumb';
 import SectionHeading from '../../../components/SectionHeading/SectionHeading';
@@ -8,7 +9,9 @@ import CTABanner from '../../../components/CTABanner/CTABanner';
 import { NoiseButton } from '../../../components/ui/NoiseButton';
 import { GlowingEffect } from '../../../components/ui/glowing-effect';
 import { SERVICES_DATA } from '../../../constants/servicesData';
-import { getServerServiceBySlug, getServerServices } from '../../../lib/cms-server';
+import JsonLd from '../../../components/JsonLd';
+import { breadcrumbJsonLd, faqJsonLd } from '../../../lib/schema';
+import { getServerServiceBySlug, getServerServices, getSiteBase, buildMetadata } from '../../../lib/cms-server';
 import { TechIcon, TechCategoryIcon } from '../../../components/TechIcon/TechIcon';
 import TechStackDock from '../../../components/TechStackDock/TechStackDock';
 import {
@@ -28,7 +31,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const cmsService = getServerServiceBySlug(slug);
-  const service = cmsService || SERVICES_DATA[slug];
+  const service = cmsService || (getServerServices().length === 0 ? SERVICES_DATA[slug] : null);
 
   if (!service) {
     return {
@@ -36,16 +39,19 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  return {
+  return buildMetadata({
     title: service.seoTitle || `${service.title} — Ideate X`,
     description: service.seoDescription || service.heroDescription || service.tagline,
-  };
+    path: `/services/${slug}`,
+    image: service.ogImage || (typeof service.image === 'object' ? service.image?.src : service.image),
+    canonical: service.canonicalUrl,
+  });
 }
 
 export default async function ServiceDetailPage({ params }) {
   const { slug } = await params;
   const cmsService = getServerServiceBySlug(slug);
-  const service = cmsService || SERVICES_DATA[slug];
+  const service = cmsService || (getServerServices().length === 0 ? SERVICES_DATA[slug] : null);
 
   if (!service) {
     notFound();
@@ -53,12 +59,28 @@ export default async function ServiceDetailPage({ params }) {
 
   const IconComponent = typeof service.icon === 'function' ? service.icon : Bot;
 
+  const base = getSiteBase();
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: service.title,
+    description: service.seoDescription || service.heroDescription || service.tagline,
+    url: `${base}/services/${slug}`,
+    provider: { '@type': 'Organization', name: 'Ideate X', url: base },
+    areaServed: { '@type': 'City', name: 'Chennai' },
+  };
+
   return (
     <main className="service-detail-page">
+      <JsonLd data={breadcrumbJsonLd(base, [{ name: 'Home', path: '/' }, { name: 'Services', path: '/services' }, { name: service.title, path: `/services/${slug}` }])} />
+      <JsonLd data={faqJsonLd(service.faqs)} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }} />
       {/* 1. Full-Width Hero Banner with Stock Photography Background */}
       <section className="service-hero-banner">
         <div className="service-hero-banner-bg">
-          <img
+          <SmartImg
+            priority
+            sizes="100vw"
             src={typeof service.image === 'object' ? service.image?.src : service.image}
             alt={typeof service.image === 'object' ? (service.image?.alt || service.title) : service.title}
             className="service-hero-banner-img"
@@ -78,10 +100,19 @@ export default async function ServiceDetailPage({ params }) {
           />
 
           <h1 className="service-hero-title">
-            {service.title.split(' ')[0]}{' '}
-            <span className="accent">
-              {service.title.split(' ').slice(1).join(' ')}
-            </span>
+            {service.heroHeading ? (
+              <>
+                {service.heroHeading.split(' ').slice(0, -2).join(' ')}{' '}
+                <span className="accent">{service.heroHeading.split(' ').slice(-2).join(' ')}</span>
+              </>
+            ) : (
+              <>
+                {service.title.split(' ')[0]}{' '}
+                <span className="accent">
+                  {service.title.split(' ').slice(1).join(' ')}
+                </span>
+              </>
+            )}
           </h1>
 
           <p className="service-hero-description">
@@ -90,10 +121,10 @@ export default async function ServiceDetailPage({ params }) {
 
           <div className="service-hero-actions">
             <NoiseButton href="/contact" icon={<ArrowUpRight size={16} strokeWidth={1.75} aria-hidden="true" />}>
-              Start This Project
+              {service.ctaLabel || 'Start This Project'}
             </NoiseButton>
-            <a href="#overview" className="service-hero-secondary-btn">
-              <span>Explore Specifications</span>
+            <a href={service.secondaryCtaHref || '#overview'} className="service-hero-secondary-btn">
+              <span>{service.secondaryCtaLabel || 'See the Details'}</span>
               <ArrowRight size={16} strokeWidth={1.75} aria-hidden="true" />
             </a>
           </div>
@@ -104,7 +135,7 @@ export default async function ServiceDetailPage({ params }) {
       <section id="overview" className="section">
         <div className="container">
           <SectionHeading>
-            <h2 className="section-title">The Engineering Approach</h2>
+            <h2 className="section-title">How We Approach It</h2>
           </SectionHeading>
 
           <div className="service-overview-grid">
@@ -113,7 +144,7 @@ export default async function ServiceDetailPage({ params }) {
               <p>{service.overview.body}</p>
               <div style={{ marginTop: 'var(--space-lg)' }}>
                 <NoiseButton href="/contact" icon={<ArrowUpRight size={16} strokeWidth={1.75} aria-hidden="true" />}>
-                  Schedule Technical Discovery
+                  {service.ctaLabel || 'Talk to Us'}
                 </NoiseButton>
               </div>
             </div>
@@ -128,7 +159,7 @@ export default async function ServiceDetailPage({ params }) {
               />
               <div className="service-highlights-title">
                 <ShieldCheck size={18} strokeWidth={1.75} color="var(--accent)" aria-hidden="true" />
-                <span>Core Architectural Guarantees</span>
+                <span>What You Can Count On</span>
               </div>
               <ul className="service-highlights-list">
                 {service.overview.highlights.map((highlight, index) => (
@@ -147,10 +178,10 @@ export default async function ServiceDetailPage({ params }) {
       <section className="section deliverables-zigzag-section">
         <div className="container">
           <SectionHeading>
-            <h2 className="section-title">What We Build & Deliver</h2>
+            <h2 className="section-title">What You Get</h2>
           </SectionHeading>
           <p style={{ maxWidth: '680px', color: 'var(--text-body)', fontSize: '1.05rem', marginBottom: 'var(--space-2xl)', lineHeight: 1.6 }}>
-            Concrete specifications, production deliverables, and technical outputs included in this service.
+            What is included in this service, and what you can expect from it.
           </p>
 
           <div className="deliverables-zigzag-container">
@@ -171,7 +202,7 @@ export default async function ServiceDetailPage({ params }) {
                     <p className="deliverable-zigzag-desc">{item.description}</p>
 
                     <ul className="deliverable-points-grid">
-                      {item.points.map((pt, pIdx) => (
+                      {(item.points || []).map((pt, pIdx) => (
                         <li key={pIdx} className="deliverable-point-item">
                           <CheckCircle2 size={16} strokeWidth={2} color="var(--accent)" aria-hidden="true" className="deliverable-point-icon" />
                           <span>{pt}</span>
@@ -218,42 +249,43 @@ export default async function ServiceDetailPage({ params }) {
       </section>
 
       {/* 4. Tech Stack & Frameworks Interactive ToolDock */}
-      <section className="section tech-stack-section">
-        <div className="container">
-          <SectionHeading>
-            <h2 className="section-title">Frameworks & Tools We Use</h2>
-          </SectionHeading>
-          <p style={{ maxWidth: '650px', color: 'var(--text-body)', fontSize: '1.05rem', marginBottom: 'var(--space-xl)', lineHeight: 1.6 }}>
-            Battle-tested, modern technologies selected for performance, maintainability, and scale.
-          </p>
-
-          <TechStackDock 
-            techStack={service.techStack} 
-            title={service.title} 
-          />
-
-          <div className="tech-stack-cta-bar" style={{ marginTop: 'var(--space-2xl)' }}>
-            <div className="tech-stack-cta-info">
-              <span className="tech-stack-cta-label">Architecture Tailored to Your Scale</span>
-              <p className="tech-stack-cta-desc">
-                Have specific infrastructure or compliance constraints? We adapt to your existing enterprise stack and CI/CD workflows.
-              </p>
+      {service.techStack && service.techStack.length > 0 && (      <section className="section tech-stack-section">
+          <div className="container">
+            <SectionHeading>
+              <h2 className="section-title">Our Tech Toolbox</h2>
+            </SectionHeading>
+            <p style={{ maxWidth: '650px', color: 'var(--text-body)', fontSize: '1.05rem', marginBottom: 'var(--space-xl)', lineHeight: 1.6 }}>
+              Battle-tested, modern technologies selected for performance, maintainability, and scale.
+            </p>
+  
+            <TechStackDock 
+              techStack={service.techStack} 
+              title={service.title} 
+            />
+  
+            <div className="tech-stack-cta-bar" style={{ marginTop: 'var(--space-2xl)' }}>
+              <div className="tech-stack-cta-info">
+                <span className="tech-stack-cta-label">Built to Fit Your Size</span>
+                <p className="tech-stack-cta-desc">
+                  Have specific hosting or compliance needs? We fit in with the tools and workflows you already use.
+                </p>
+              </div>
+              <NoiseButton href="/contact" icon={<ArrowUpRight size={16} strokeWidth={1.75} aria-hidden="true" />}>
+                Discuss Custom Stack
+              </NoiseButton>
             </div>
-            <NoiseButton href="/contact" icon={<ArrowUpRight size={16} strokeWidth={1.75} aria-hidden="true" />}>
-              Discuss Custom Stack
-            </NoiseButton>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* 5. Phased Execution Roadmap */}
       <section className="section">
         <div className="container">
           <SectionHeading>
-            <h2 className="section-title">How We Execute</h2>
+            <h2 className="section-title">How It Comes Together</h2>
           </SectionHeading>
           <p style={{ maxWidth: '650px', color: 'var(--text-body)', fontSize: '1.05rem', marginBottom: 'var(--space-xl)', lineHeight: 1.6 }}>
-            A disciplined, milestone-driven execution process with bi-weekly deployments and total transparency.
+            A clear path from the first conversation to the final delivery.
           </p>
 
           <div className="service-roadmap-flow">
@@ -273,25 +305,27 @@ export default async function ServiceDetailPage({ params }) {
       </section>
 
       {/* 6. Service-Specific FAQs */}
-      <FAQAccordion
-        faqs={service.faqs}
-        title={`${service.title} FAQs`}
-        subtitle={`Direct answers regarding timelines, technical scope, and execution for ${service.title.toLowerCase()}.`}
-      />
+      {service.faqs && service.faqs.length > 0 && (
+        <FAQAccordion
+          faqs={service.faqs}
+          title={`${service.title} FAQs`}
+          subtitle={`Straight answers about timelines, scope and how we work on ${service.title.toLowerCase()}.`}
+        />
+      )}
 
       {/* 7. Related Services Navigator */}
       {service.related && service.related.length > 0 && (
         <section className="related-services-section">
           <div className="container">
             <SectionHeading>
-              <h2 className="section-title">Complementary Capabilities</h2>
+              <h2 className="section-title">Services That Work Well Together</h2>
             </SectionHeading>
 
             <div className="related-services-grid">
               {service.related.map((relSlug) => {
-                const relService = SERVICES_DATA[relSlug];
+                const relService = getServerServiceBySlug(relSlug) || (getServerServices().length === 0 ? SERVICES_DATA[relSlug] : null);
                 if (!relService) return null;
-                const RelIcon = relService.icon;
+                const RelIcon = typeof relService.icon === 'function' ? relService.icon : Bot;
 
                 return (
                   <Link key={relSlug} href={`/services/${relSlug}`} className="related-service-card">
@@ -313,7 +347,7 @@ export default async function ServiceDetailPage({ params }) {
                     </div>
 
                     <div className="related-service-link-text">
-                      <span>Explore service details</span>
+                      <span>See this service</span>
                       <ArrowRight size={14} strokeWidth={1.75} aria-hidden="true" />
                     </div>
                   </Link>
@@ -326,9 +360,9 @@ export default async function ServiceDetailPage({ params }) {
 
       {/* 8. Final Call to Action */}
       <CTABanner
-        title={`Ready to build your ${service.title}?`}
-        subtitle="Schedule a technical discovery call with our engineering leads to outline architecture, timelines, and milestones."
-        primaryBtnText="Start a Project"
+        title={service.closingHeading || `Ready to talk about ${service.title}?`}
+        subtitle={service.closingText || "Tell us what you have in mind and we will discuss the right way forward."}
+        primaryBtnText={service.closingCta || "Start a Project"}
         primaryBtnHref="/contact"
         secondaryBtnText="Explore All Services"
         secondaryBtnHref="/services"

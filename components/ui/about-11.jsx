@@ -12,7 +12,7 @@ export const defaultChapters = [
     phase: "Direct Senior Engineering",
     title: "Direct Collaboration with Technical Leads",
     description:
-      "You partner directly with lead software engineers and architects who design, build, and deploy your codebase. We eliminate sales intermediaries, account managers, and junior developer handoffs.",
+      "You partner directly with lead tech engineers and architects who design, build, and deploy your codebase. We eliminate sales intermediaries, account managers, and junior developer handoffs.",
   },
   {
     number: "02",
@@ -39,7 +39,7 @@ export const defaultChapters = [
 
 export function About11({
   title = "Engineering built on clarity, speed, and complete ownership.",
-  narrative = "We eliminated the traditional bloated agency model. You partner directly with senior practitioners who design, architect, and deploy your software.",
+  narrative = "We eliminated the traditional bloated agency model. You partner directly with senior practitioners who design, architect, and deploy your product.",
   chapters = defaultChapters,
   ctaText = "Start a Conversation",
   ctaHref = "/contact",

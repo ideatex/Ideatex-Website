@@ -1,11 +1,20 @@
 import { NextResponse } from 'next/server';
-import { insertItem, logActivity, readDb } from '@/lib/cms-db';
+import { insertItem } from '@/lib/cms-db';
+import { notifyEnquiry } from '@/lib/mailer';
+import { saveEnquiry, clean, isRateLimited, isValidPhone, EMAIL_RE } from '@/lib/enquiry';
 import { extractPhone } from '@/lib/chatbot-engine';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(request) {
   try {
+    if (isRateLimited(request, 'chatbot-enquiry')) {
+      return NextResponse.json({
+        success: false,
+        error: "Too many enquiries submitted. Please try again in a few minutes or use the contact page.",
+      }, { status: 429 });
+    }
+
     const body = await request.json();
     const {
       name,
@@ -24,7 +33,7 @@ export async function POST(request) {
       conversation_id,
     } = body;
 
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).trim())) {
+    if (!email || !EMAIL_RE.test(String(email).trim()) || String(email).length > 254) {
       return NextResponse.json({
         success: false,
         error: "A valid email address is required to submit your project enquiry.",
@@ -47,14 +56,22 @@ export async function POST(request) {
       }
     }
 
+    if (resolvedPhone && !isValidPhone(resolvedPhone)) {
+      return NextResponse.json({
+        success: false,
+        error: "Please enter a valid mobile number (7–15 digits) or leave it blank.",
+      }, { status: 400 });
+    }
+    resolvedPhone = clean(resolvedPhone, 30);
+
     const leadId = `cbot-enq-${Date.now()}`;
-    const visitorName = name && String(name).trim().length > 0 ? String(name).trim() : "Website Visitor";
-    const selectedService = service || "Custom Software / Web / App Development";
+    const visitorName = clean(name, 100) || "Website Visitor";
+    const selectedService = clean(service, 120) || "General Enquiry";
 
     const requirements = [
-      project_description ? `Project: ${project_description}` : null,
-      target_users ? `Target Users: ${target_users}` : null,
-      platform ? `Platform: ${platform}` : null,
+      project_description ? `Project: ${clean(project_description, 2000)}` : null,
+      target_users ? `Audience: ${clean(target_users, 300)}` : null,
+      platform ? `Platform / Focus: ${clean(platform, 100)}` : null,
     ].filter(Boolean).join(" | ");
 
     const enquiryRecord = {
@@ -62,14 +79,19 @@ export async function POST(request) {
       conversationId: conversation_id || `conv-${Date.now()}`,
       visitorName,
       name: visitorName,
-      email: String(email).trim().toLowerCase(),
+      email: clean(email, 254).toLowerCase(),
       phone: resolvedPhone,
       service: selectedService,
-      project_description: project_description || "Chatbot Project Discovery Enquiry",
+      project_description: clean(project_description, 2000) || "Chatbot Project Discovery Enquiry",
       requirements: requirements || "Enquiry captured via Ideate X Website Assistant",
-      timeline: timeline || "Flexible",
-      budget: budget || "Discuss with Engineering Team",
-      conversationHistory: Array.isArray(conversation_history) ? conversation_history.slice(-15) : [],
+      timeline: clean(timeline, 100) || "Flexible",
+      budget: clean(budget, 100) || "To be discussed",
+      conversationHistory: Array.isArray(conversation_history)
+        ? conversation_history.slice(-15).map((m) => ({
+            role: clean(m?.role, 20),
+            content: clean(typeof m === 'string' ? m : m?.content || m?.text, 2000),
+          }))
+        : [],
       source: "Ideate X Website Chatbot",
       status: "new",
       internalNotes: "Lead captured via Ideate X interactive website assistant.",
@@ -79,31 +101,24 @@ export async function POST(request) {
     // 1. Insert into chatbot_enquiries
     insertItem('chatbot_enquiries', enquiryRecord);
 
-    // 2. Also insert unified record into main enquiries collection
-    insertItem('enquiries', {
+    // 2. Also insert unified record into main enquiries collection (same shape as contact form)
+    const unified = saveEnquiry({
       type: 'project',
       name: visitorName,
       email: enquiryRecord.email,
       phone: enquiryRecord.phone,
-      company: '',
       service: selectedService,
-      message: `[CHATBOT LEAD]\n${requirements}\nTimeline: ${enquiryRecord.timeline}\nBudget: ${enquiryRecord.budget}`,
+      message: `[CHATBOT LEAD]
+${requirements}
+Timeline: ${enquiryRecord.timeline}
+Budget: ${enquiryRecord.budget}`,
       timeline: enquiryRecord.timeline,
       budget: enquiryRecord.budget,
       source: 'Website Chatbot Assistant',
-      status: 'new',
       internalNotes: `Auto-captured via Chatbot session (${enquiryRecord.conversationId}).`,
-      createdAt: new Date().toISOString(),
     });
 
-    logActivity(
-      'visitor',
-      visitorName,
-      'CHATBOT_LEAD_SUBMITTED',
-      'ChatbotEnquiry',
-      leadId,
-      `New project lead submitted via chatbot: ${visitorName} (${enquiryRecord.email}) for ${selectedService}`
-    );
+    await notifyEnquiry(unified);
 
     console.log("✅ Chatbot project enquiry saved to CMS:", enquiryRecord);
 

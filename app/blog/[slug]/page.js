@@ -8,6 +8,8 @@ import {
   Calendar,
   CheckCircle2,
 } from 'lucide-react';
+import JsonLd from '../../../components/JsonLd';
+import { breadcrumbJsonLd } from '../../../lib/schema';
 import Breadcrumb from '../../../components/Breadcrumb/Breadcrumb';
 import SectionHeading from '../../../components/SectionHeading/SectionHeading';
 import CTABanner from '../../../components/CTABanner/CTABanner';
@@ -20,6 +22,8 @@ import {
 import {
   getServerInsightBySlug,
   getServerInsights,
+  getSiteBase,
+  buildMetadata,
 } from '../../../lib/cms-server';
 import '../../../styles/blog-detail.css';
 
@@ -42,10 +46,16 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  return {
+  return buildMetadata({
     title: post.seoTitle || `${post.title} — Technical Insights | Ideate X`,
     description: post.seoDescription || post.subtitle || post.excerpt,
-  };
+    path: `/blog/${slug}`,
+    image: post.ogImage || post.coverImage || post.image?.src,
+    canonical: post.canonicalUrl,
+    type: 'article',
+    publishedTime: post.date,
+    modifiedTime: post.updatedAt,
+  });
 }
 
 export default async function BlogDetailPage({ params }) {
@@ -73,8 +83,27 @@ export default async function BlogDetailPage({ params }) {
     }] : []
   );
 
+  const base = getSiteBase();
+  const blogImage = post.ogImage || post.coverImage || post.image?.src || (typeof post.image === 'string' ? post.image : '') || '/logo-ideatex.png';
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.seoDescription || post.subtitle || post.excerpt,
+    datePublished: post.date,
+    dateModified: post.updatedAt || post.date,
+    author: { '@type': 'Person', name: authorName },
+    publisher: { '@type': 'Organization', name: 'Ideate X', logo: { '@type': 'ImageObject', url: `${base}/logo-ideatex.png` } },
+    mainEntityOfPage: `${base}/blog/${slug}`,
+    image: blogImage.startsWith('/') ? `${base}${blogImage}` : blogImage,
+    ...(post.focusKeyword ? { keywords: post.focusKeyword } : {}),
+  };
+
+
   return (
     <main className="blog-detail-page">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }} />
+      <JsonLd data={breadcrumbJsonLd(base, [{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blog' }, { name: post.title, path: `/blog/${slug}` }])} />
       {/* ── Hero Section ── */}
       <section className="blog-detail-hero">
         <div className="blog-detail-hero-glow" />
@@ -264,7 +293,7 @@ export default async function BlogDetailPage({ params }) {
                   lineHeight: 1.5,
                 }}
               >
-                Building software architecture and high-performance digital products at Ideate X.
+                Building smart, fast digital products at Ideate X.
               </p>
             </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import SmartImg from '../SmartImg';
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -15,7 +16,7 @@ const DEFAULT_SERVICES = [
     description:
       "Practical AI agents and automated workflows connecting your tools and data.",
     image:
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&auto=format&q=80&fit=crop",
+      "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&auto=format&q=80&fit=crop",
     link: "/services/ai-agentic-development",
   },
   {
@@ -66,7 +67,7 @@ const DEFAULT_SERVICES = [
       "Data-driven demand generation, targeted acquisition funnels, and conversion optimization.",
     image:
       "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&auto=format&q=80&fit=crop",
-    link: "/services/digital-marketing",
+    link: "/services#marketing",
   },
 ];
 
@@ -132,6 +133,7 @@ export function VerticalTabs({
       <div className="vertical-tabs-grid">
         {/* Left Column: Vertical Tabs */}
         <div className="vertical-tabs-left">
+          <div className="vertical-tabs-stack">
           <div className="vertical-tabs-list">
             {services.map((service, index) => {
               const isActive = activeIndex === index;
@@ -144,7 +146,7 @@ export function VerticalTabs({
                     "vertical-tab-item",
                     isActive ? "active" : ""
                   )}
-                  aria-selected={isActive}
+                  aria-current={isActive ? "true" : undefined}
                 >
                   {/* Left Track Progress Indicator */}
                   <div className="vertical-tab-indicator">
@@ -190,7 +192,7 @@ export function VerticalTabs({
                               className="vertical-tab-link"
                               onClick={(e) => e.stopPropagation()}
                             >
-                              <span>Explore capability</span>
+                              <span>{service.ctaLabel || "Explore capability"}</span>
                               <ArrowRight size={14} strokeWidth={1.75} aria-hidden="true" />
                             </Link>
                           )}
@@ -201,6 +203,32 @@ export function VerticalTabs({
                 </button>
               );
             })}
+          </div>
+
+          {/* Invisible copies of every tab state share this grid cell, so the stack always
+              reserves the tallest layout and the page below never jumps as tabs change. */}
+          {services.map((active, i) => (
+            <div key={`sizer-${active.id || i}`} className="vertical-tabs-list vertical-tabs-sizer" aria-hidden="true" inert={true}>
+              {services.map((service, j) => (
+                <div key={j} className={cn("vertical-tab-item", j === i ? "active" : "")}>
+                  <div className="vertical-tab-content">
+                    <span className="vertical-tab-title">{service.title}</span>
+                    {j === i && (
+                      <div>
+                        <p className="vertical-tab-desc">{service.description}</p>
+                        {service.link && (
+                          <span className="vertical-tab-link">
+                            <span>{service.ctaLabel || "Explore capability"}</span>
+                            <ArrowRight size={14} strokeWidth={1.75} />
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ))}
           </div>
         </div>
 
@@ -226,7 +254,7 @@ export function VerticalTabs({
                 className="vertical-tabs-slide"
                 onClick={handleNext}
               >
-                <img
+                <SmartImg sizes="(max-width: 1024px) 100vw, 640px"
                   src={activeService.image}
                   alt={activeService.title}
                   className="vertical-tabs-image"

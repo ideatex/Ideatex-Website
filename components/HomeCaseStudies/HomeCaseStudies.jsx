@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import SmartImg from '../SmartImg';
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import "./HomeCaseStudies.css";
@@ -85,7 +86,7 @@ export default function HomeCaseStudies({ studies = HOME_CASE_STUDIES }) {
         >
           {/* Card Image */}
           <div className="home-case-img-container">
-            <img
+            <SmartImg sizes="(max-width: 768px) 100vw, 600px"
               src={item.image}
               alt={item.title}
               className="home-case-img"

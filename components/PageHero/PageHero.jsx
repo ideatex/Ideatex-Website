@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import SmartImg from '../SmartImg';
 import { motion } from 'framer-motion';
 import Breadcrumb from '../Breadcrumb/Breadcrumb';
 import './PageHero.css';
@@ -55,7 +56,9 @@ export default function PageHero({ title, subtitle, breadcrumb, widget, accentTe
       <div className="page-hero-bg">
         {backgroundImage && (
           <div className="page-hero-bg-img-wrap">
-            <img
+            <SmartImg
+              priority
+              sizes="100vw"
               src={backgroundImage}
               alt={typeof title === 'string' ? title : 'Page Hero Banner'}
               className="page-hero-bg-img"

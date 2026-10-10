@@ -12,7 +12,7 @@ export default function TermsPage() {
     <main className="legal-page">
       <PageHero
         title="Terms of Service"
-        subtitle="Standard terms and conditions governing software development, product engineering, and digital consulting services."
+        subtitle="Standard terms and conditions governing product development, product engineering, and digital consulting services."
         breadcrumb={[
           { label: "Home", path: "/" },
           { label: "Legal", path: "/terms" },
@@ -62,7 +62,7 @@ export default function TermsPage() {
               <h2 className="legal-section-title">Scope of Services & Deliverables</h2>
             </div>
             <p className="legal-text">
-              Ideate X provides bespoke software engineering, multi-tenant SaaS architecture, web/mobile application development, UI/UX design, and AI automation consulting:
+              Ideate X provides bespoke product engineering, multi-tenant SaaS architecture, web/mobile application development, UI/UX design, and AI automation consulting:
             </p>
             <ul className="legal-list">
               <li><strong>Statements of Work (SOW):</strong> Each engineering engagement is governed by an executed SOW outlining exact milestones, technical deliverables, timelines, and acceptance criteria.</li>
@@ -80,7 +80,7 @@ export default function TermsPage() {
             </p>
             <div className="legal-callout">
               <p>
-                <strong>Full Ownership Transfer:</strong> Upon full receipt of payment for contracted milestones, all custom software code, designs, documentation, and digital assets developed exclusively for the Client transfer entirely to the Client without recurring license fees.
+                <strong>Full Ownership Transfer:</strong> Upon full receipt of payment for contracted milestones, all custom code, designs, documentation, and digital assets developed exclusively for the Client transfer entirely to the Client without recurring license fees.
               </p>
             </div>
             <ul className="legal-list">

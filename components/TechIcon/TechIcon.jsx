@@ -8,12 +8,13 @@ import {
   FileCode, Film, FileSpreadsheet, Kanban, Webhook, Container,
   Gauge, PenTool, Layout, Rocket, LineChart
 } from 'lucide-react';
+import { getBrandIcon, brandColor } from './brandIcons';
 
 /**
  * Modern Precision Vector Icons for Tech Stacks & Tools
  * Covers 100% of the authentic logos across all 10 Services with official brand geometry & dark-mode colors.
  */
-export function TechIcon({ name, size = 24, className = "" }) {
+export function TechIcon({ name, size = 24, className = "", onLight = false }) {
   const norm = (name || "").toLowerCase().trim();
   const baseSvgProps = {
     width: size,
@@ -22,6 +23,17 @@ export function TechIcon({ name, size = 24, className = "" }) {
     className: `tech-icon-svg ${className}`.trim(),
     style: { display: 'block', margin: 'auto', flexShrink: 0 }
   };
+
+  // Official brand logo when one is available (falls through to the drawn icons below otherwise)
+  const brand = getBrandIcon(norm);
+  if (brand) {
+    return (
+      <svg {...baseSvgProps} viewBox="0 0 24 24" fill={brandColor(brand.hex, onLight)} role="img" aria-label={brand.title}>
+        <title>{brand.title}</title>
+        <path d={brand.path} />
+      </svg>
+    );
+  }
 
   // ─── 1. REACT & REACT NATIVE ───
   if (norm === 'react' || norm === 'react native' || (norm.includes('react') && !norm.includes('query') && !norm.includes('architect'))) {

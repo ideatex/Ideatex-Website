@@ -32,7 +32,7 @@ const metrics = [
 
 export function AboutBento({
   title = "Engineering Impact Without Overhead.",
-  subtitle = "We partner directly with visionary founders and enterprise teams to architect, build, and deploy mission-critical software and AI systems.",
+  subtitle = "We partner directly with visionary founders and enterprise teams to architect, build, and deploy mission-critical tech and AI systems.",
   className = "",
 }) {
   return (

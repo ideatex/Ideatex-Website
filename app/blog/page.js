@@ -51,11 +51,11 @@ export default function Blog() {
         ]}
         title={
           <>
-            Ideas worth <span className="accent">putting to work.</span>
+            Ideas Worth <span className="accent">Putting to Work.</span>
           </>
         }
-        subtitle="Practical thoughts on software, AI agents, automation, product development, technology, and digital growth."
-        backgroundImage="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1920&h=1080&auto=format&q=80&fit=crop"
+        subtitle="Practical perspectives on creative production, digital marketing, software development, AI, automation and building digital products."
+        backgroundImage="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1920&h=1080&auto=format&q=80&fit=crop"
         widget={
           <div
             className="hero-widget-glass"

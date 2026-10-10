@@ -31,7 +31,7 @@ export const BLOG_POSTS = [
         id: 'isolation-models',
         heading: 'Tenant Isolation Models: Schema vs. Row-Level Security',
         content: [
-          'When designing a multi-tenant B2B software platform, the first fundamental decision is how tenant data will be segregated at the storage layer. The three standard approaches are separate database per tenant, separate schema per tenant, or shared database with pooled tables using Row-Level Security (RLS).',
+          'When designing a multi-tenant B2B digital platform, the first fundamental decision is how tenant data will be segregated at the storage layer. The three standard approaches are separate database per tenant, separate schema per tenant, or shared database with pooled tables using Row-Level Security (RLS).',
           'For 90% of early to mid-stage SaaS applications, pooled tables backed by PostgreSQL Row-Level Security offer the optimal balance between operational overhead, infrastructure cost, and strict data boundary enforcement.',
         ],
         bulletPoints: [

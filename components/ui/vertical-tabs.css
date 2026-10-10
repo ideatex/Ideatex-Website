@@ -43,6 +43,19 @@
   }
 }
 
+.vertical-tabs-stack {
+  display: grid;
+}
+
+.vertical-tabs-stack > * {
+  grid-area: 1 / 1;
+}
+
+.vertical-tabs-sizer {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .vertical-tabs-list {
   display: flex;
   flex-direction: column;
@@ -357,4 +370,9 @@
 
 .vertical-tabs-nav-btn:active {
   transform: scale(0.92);
+}
+
+/* Larger hit area for the pillar link */
+.vertical-tab-link {
+  min-height: 44px;
 }

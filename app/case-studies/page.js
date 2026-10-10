@@ -7,6 +7,8 @@ import { ArrowUpRight } from "lucide-react";
 import PageHero from "../../components/PageHero/PageHero";
 import SectionHeading from "../../components/SectionHeading/SectionHeading";
 import CTABanner from "../../components/CTABanner/CTABanner";
+import FAQAccordion from "../../components/FAQAccordion/FAQAccordion";
+import { CASE_STUDIES_FAQS } from "../../constants/pageFaqs";
 import { CASE_STUDIES, CASE_STUDY_CATEGORIES } from "../../constants/caseStudiesData";
 import { useCMSData } from "../../lib/cms-client";
 import "../../components/CaseStudy/CaseStudy.css";
@@ -37,9 +39,9 @@ export default function CaseStudiesPage() {
     <main className="case-studies-page">
       <PageHero
         breadcrumb={[{ path: "/", label: "Home" }, { label: "Case Studies" }]}
-        title={<>Behind the work. <span className="accent">Behind the results.</span></>}
-        subtitle="Go beyond the finished product. See the challenges, decisions, and solutions behind the platforms we've built."
-        backgroundImage="https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=1920&h=1080&auto=format&q=80&fit=crop"
+        title={<>The Thinking <span className="accent">Behind the Work.</span></>}
+        subtitle="A closer look at the challenges, decisions and solutions behind selected projects, from business platforms to digital products and connected workflows."
+        backgroundImage="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1920&h=1080&auto=format&q=80&fit=crop"
       />
 
       <section className="section">
@@ -103,7 +105,7 @@ export default function CaseStudiesPage() {
                           href={`/case-studies/${study.slug}`}
                           className="case-study-arrow-link"
                           aria-label={`View ${study.title}`}
-                          style={{ color: "var(--accent)", display: "inline-flex", alignItems: "center" }}
+                          style={{ color: "var(--accent)", display: "inline-flex", alignItems: "center", padding: "13px", margin: "-13px" }}
                         >
                           <ArrowUpRight size={18} strokeWidth={2} />
                         </Link>
@@ -142,6 +144,8 @@ export default function CaseStudiesPage() {
           </div>
         </div>
       </section>
+
+      <FAQAccordion faqs={CASE_STUDIES_FAQS} title="Before You Start a Project" subtitle="Answers to what clients ask after reading our case studies." />
 
       <CTABanner />
     </main>

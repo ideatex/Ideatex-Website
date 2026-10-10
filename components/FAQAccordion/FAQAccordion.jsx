@@ -5,16 +5,14 @@ import './FAQAccordion.css';
 import { FaqAccordion, defaultFaqData } from '../ui/faq-accordion';
 import SectionHeading from '../SectionHeading/SectionHeading';
 import { useCMSData } from '../../lib/cms-client';
-import { Bot, Sparkles, GitBranch, Workflow, Cpu, MessageSquare } from 'lucide-react';
-
-const defaultIcons = [Bot, Sparkles, GitBranch, Workflow, Cpu, MessageSquare];
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 export default function FAQAccordion({ 
   faqs, 
   title, 
   subtitle,
-  sectionLabel,
-  timestamp = "Every day, 9:01 AM",
+  layout = 'stacked',
   className = ""
 }) {
   const cms = useCMSData();
@@ -24,7 +22,6 @@ export default function FAQAccordion({
         id: f.id || idx + 1,
         question: f.question,
         answer: f.answer,
-        icon: defaultIcons[idx % defaultIcons.length],
       }))
     : defaultFaqData;
 
@@ -33,7 +30,26 @@ export default function FAQAccordion({
 
   const activeTitle = title || faqSection?.heading || "Questions before we start?";
   const activeSubtitle = subtitle !== undefined ? subtitle : (faqSection?.description || "A few things clients usually ask us before kicking off a project.");
-  const activeSectionLabel = sectionLabel || "FAQ";
+
+  if (layout === 'split') {
+    return (
+      <section className={`faq-section section faq-split ${className}`}>
+        <div className="container faq-split-grid">
+          <div className="faq-split-copy">
+            <h2 className="section-title">{activeTitle}</h2>
+            {activeSubtitle && <p className="faq-split-lead">{activeSubtitle}</p>}
+            <Link href="/contact" className="faq-split-link">
+              <span>Still curious? Talk to us</span>
+              <ArrowRight size={16} strokeWidth={1.75} aria-hidden="true" />
+            </Link>
+          </div>
+          <div className="faq-accordion-wrapper">
+            <FaqAccordion data={activeFaqs} />
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className={`faq-section section ${className}`}>
@@ -52,10 +68,7 @@ export default function FAQAccordion({
 
         {/* Centered FaqAccordion Component with Zig-Zag layout */}
         <div className="faq-accordion-wrapper">
-          <FaqAccordion 
-            data={activeFaqs}
-            timestamp={timestamp}
-          />
+          <FaqAccordion data={activeFaqs} />
         </div>
       </div>
     </section>

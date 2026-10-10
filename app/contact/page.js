@@ -8,17 +8,25 @@ import { NoiseButton } from "../../components/ui/NoiseButton";
 import { COMPANY_DETAILS } from "../../constants/contactInfo";
 import { useCMSData } from "../../lib/cms-client";
 import "../../components/Contact/ContactForm.css";
+import FAQAccordion from "../../components/FAQAccordion/FAQAccordion";
+import { CONTACT_FAQS } from "../../constants/pageFaqs";
 
 const projectTypeOptions = [
-  "Website",
-  "Mobile App",
-  "Web App",
-  "E-Commerce",
-  "Brand Identity",
-  "3D & Animation",
-  "Social Media Marketing",
-  "Brand Strategy & Consulting",
-  "Other",
+  "AI Agentic Development",
+  "Workflow Automations",
+  "Chatbot Development",
+  "Custom Apps Development",
+  "Mobile Apps Development",
+  "Web Development",
+  "SaaS Development",
+  "API Integrations",
+  "Search Engine Optimization",
+  "Ad Campaigns & Brand Engagement",
+  "Growth Marketing & Conversion Optimization",
+  "Product Photography & Shoots",
+  "Video Editing & Post-Production",
+  "Commercial & Promotional Videos",
+  "Not Sure Yet",
 ];
 
 const socialLinks = [
@@ -84,6 +92,7 @@ export default function ContactPage() {
     phone: "",
     message: "",
     projectType: [],
+    website: "", // honeypot, must stay empty
   });
 
   const [status, setStatus] = useState("idle");
@@ -121,7 +130,7 @@ export default function ContactPage() {
 
       if (res.ok && data?.success) {
         setStatus("success");
-        setFormData({ name: "", email: "", phone: "", message: "", projectType: [] });
+        setFormData({ name: "", email: "", phone: "", message: "", projectType: [], website: "" });
       } else {
         setStatus("error");
         setErrorMessage(
@@ -159,8 +168,8 @@ export default function ContactPage() {
 
       <PageHero
         breadcrumb={[{ path: "/", label: "Home" }, { label: "Contact" }]}
-        title={<>Have something <span className="accent">worth building?</span></>}
-        subtitle="Tell us what you're working on, what you're trying to solve, or where things are getting stuck. We'll start from there."
+        title={<>Tell Us What <span className="accent">You&apos;re Working On.</span></>}
+        subtitle="Planning a product shoot? Looking to improve your online presence? Building an application or automating a workflow? Tell us what you have in mind."
         backgroundImage="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&h=1080&auto=format&q=80&fit=crop"
         widget={
           <div className="hero-widget-glass" style={{ display: "flex", flexDirection: "column", gap: "10px", minWidth: "260px" }}>
@@ -189,10 +198,9 @@ export default function ContactPage() {
             {/* Left/Main: Contact Form Card */}
             <div className="contact-form-glass-card">
               <div className="contact-form-header">
-                <h3 className="contact-form-main-message">Let&apos;s talk!</h3>
+                <h3 className="contact-form-main-message">Tell us about your project</h3>
                 <p className="contact-form-lead-text">
-                  Have a question, RFP, or exciting software idea? Fill in the details below.
-                </p>
+                  A few details are enough to get the conversation started. Tell us what you need, and we&apos;ll take it from there.</p>
               </div>
 
               {/* Direct Mail & Social Links Cluster */}
@@ -230,7 +238,7 @@ export default function ContactPage() {
                   <div className="contact-field-subtitle">Leave us a brief message</div>
                   <div className="contact-field-grid">
                     <div className="contact-form-group">
-                      <label htmlFor="name">Your name *</label>
+                      <label htmlFor="name">Name *</label>
                       <input
                         type="text"
                         id="name"
@@ -242,7 +250,7 @@ export default function ContactPage() {
                       />
                     </div>
                     <div className="contact-form-group">
-                      <label htmlFor="email">Email *</label>
+                      <label htmlFor="email">Work Email *</label>
                       <input
                         type="email"
                         id="email"
@@ -254,7 +262,7 @@ export default function ContactPage() {
                       />
                     </div>
                     <div className="contact-form-group contact-field-full">
-                      <label htmlFor="phone">Mobile Number</label>
+                      <label htmlFor="phone">Phone (optional)</label>
                       <input
                         type="tel"
                         id="phone"
@@ -267,12 +275,23 @@ export default function ContactPage() {
                   </div>
                 </div>
 
+                <input
+                  type="text"
+                  name="website"
+                  value={formData.website}
+                  onChange={handleChange}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", opacity: 0 }}
+                />
+
                 <div className="contact-form-group">
-                  <label htmlFor="message">Briefly describe your project idea... *</label>
+                  <label htmlFor="message">Project Details *</label>
                   <textarea
                     id="message"
                     name="message"
-                    placeholder="Tell us what you're building, target launch goals, and any core feature requirements..."
+                    placeholder="What do you need, who is it for, and is there a date you are working towards?"
                     value={formData.message}
                     onChange={handleChange}
                     rows={4}
@@ -282,7 +301,7 @@ export default function ContactPage() {
 
                 {/* "I'm looking for..." Multi-Select Checkboxes */}
                 <div>
-                  <div className="contact-options-title">I&apos;m looking for...</div>
+                  <div className="contact-options-title">Service of Interest</div>
                   <div className="contact-options-grid">
                     {projectTypeOptions.map((option) => {
                       const isChecked = formData.projectType.includes(option);
@@ -319,7 +338,7 @@ export default function ContactPage() {
                     className="contact-submit-btn"
                     icon={<Send size={16} strokeWidth={1.75} aria-hidden="true" />}
                   >
-                    {status === "sending" ? "Sending Message..." : "Send a message"}
+                    {status === "sending" ? "Sending..." : "Tell Us About Your Project"}
                   </NoiseButton>
                 </div>
 
@@ -339,7 +358,7 @@ export default function ContactPage() {
                   }}
                 >
                   <CheckCircle2 size={18} strokeWidth={1.75} aria-hidden="true" />
-                  <span>Thank you! Your message has been sent. We will respond within 24 hours.</span>
+                  <span>Thank you! Your message has been sent. We will be in touch soon.</span>
                 </div>
               )}
 
@@ -369,8 +388,7 @@ export default function ContactPage() {
                   Direct Contact
                 </h3>
                 <p style={{ fontSize: "0.875rem", color: "var(--text-body)", lineHeight: 1.6, marginBottom: "16px" }}>
-                  Prefer direct phone or email communication? Reach out directly to our engineering leads.
-                </p>
+                  Prefer to talk directly? Call or email us.</p>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -418,15 +436,15 @@ export default function ContactPage() {
                 <ul className="contact-steps-list">
                   <li className="contact-steps-item">
                     <CheckCircle2 size={16} strokeWidth={1.75} aria-hidden="true" className="contact-steps-icon" />
-                    <span>We review your requirements and technical goals with our engineering leads.</span>
+                    <span>We read through what you have shared.</span>
                   </li>
                   <li className="contact-steps-item">
                     <CheckCircle2 size={16} strokeWidth={1.75} aria-hidden="true" className="contact-steps-icon" />
-                    <span>We schedule a 30-minute discovery call to align on architecture & scope.</span>
+                    <span>We get in touch to talk through what you need.</span>
                   </li>
                   <li className="contact-steps-item">
                     <CheckCircle2 size={16} strokeWidth={1.75} aria-hidden="true" className="contact-steps-icon" />
-                    <span>You receive a clear scope proposal with timeline and fixed milestones.</span>
+                    <span>We agree on the right approach before any work begins.</span>
                   </li>
                 </ul>
               </div>
@@ -434,6 +452,8 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
+
+      <FAQAccordion faqs={CONTACT_FAQS} title="Before You Get in Touch" subtitle="Quick answers to what people ask before sending an enquiry." />
     </main>
   );
 }

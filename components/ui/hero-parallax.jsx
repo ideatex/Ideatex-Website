@@ -1,76 +1,48 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import {
   motion,
   useScroll,
   useTransform,
   useSpring,
+  useReducedMotion,
 } from "framer-motion";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import SmartImg from "../SmartImg";
 import { NoiseButton } from "./NoiseButton";
 import "../Hero/Hero.css";
 
-export const products = [
-  {
-    title: "CSAVA",
-    link: "https://csava.org",
-    thumbnail: "/clients/CSAVA.png",
-    category: "SaaS & Platforms",
-  },
-  {
-    title: "Keyo",
-    link: "https://keyo.co.in/en",
-    thumbnail: "/clients/Keyo.png",
-    category: "Mobile Apps & PWA",
-  },
-  {
-    title: "SBE Builders",
-    link: "https://sbebuilders.in",
-    thumbnail: "/clients/SBEBuilders.png",
-    category: "Enterprise Web Platform",
-  },
-  {
-    title: "Sami V Landmarks",
-    link: "https://samivlandmarks.in",
-    thumbnail: "/clients/SamiVLandmarks.png",
-    category: "Real Estate & Infrastructure",
-  },
-  {
-    title: "Tifbox",
-    link: "https://tifboxmeals.com",
-    thumbnail: "/clients/Tifbox.png",
-    category: "Mobile Apps & FoodTech",
-  },
-  {
-    title: "Vevy.One",
-    link: "https://vevyone.netlify.app",
-    thumbnail: "/clients/Vevy.One.png",
-    category: "SaaS & API Platform",
-  },
-  {
-    title: "Srinivas Packaging",
-    link: "https://srinivaspackaging.in",
-    thumbnail: "/clients/SrinivasPackaging.png",
-    category: "Manufacturing & Packaging",
-  },
-];
+// Phones get a shorter travel distance so the rows come into view sooner
+const NARROW_QUERY = "(max-width: 768px)";
+const subscribeNarrow = (cb) => {
+  const mq = window.matchMedia(NARROW_QUERY);
+  mq.addEventListener("change", cb);
+  return () => mq.removeEventListener("change", cb);
+};
+const getNarrow = () => window.matchMedia(NARROW_QUERY).matches;
 
+// Hero parallax (21st.dev / Aceternity "hero-parallax"): two rows of project cards that slide
+// sideways, tilt and rise into place as the page scrolls.
 export const HeroParallax = ({
-  products: productList = products,
+  products = [],
   title,
   subtitle,
   primaryCtaText,
   secondaryCtaText,
+  primaryCtaUrl,
+  secondaryCtaUrl,
 }) => {
-  const items = productList && productList.length > 0 ? productList : products;
-  
-  // Two rows with client images
-  const firstRow = items;
-  const secondRow = [...items].reverse();
-  const ref = useRef(null);
+  const reduceMotion = useReducedMotion();
+  const narrow = React.useSyncExternalStore(subscribeNarrow, getNarrow, () => false);
+  const total = products.length;
+  // Two rows of cards: the first slides right, the second slides left
+  const first = Math.ceil(total / 2);
+  const firstRow = products.slice(0, first);
+  const secondRow = products.slice(first);
 
+  const ref = React.useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -78,72 +50,40 @@ export const HeroParallax = ({
 
   const springConfig = { stiffness: 300, damping: 30, bounce: 100 };
 
-  const translateX = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, 600]),
-    springConfig
-  );
-  const translateXReverse = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, -600]),
-    springConfig
-  );
-  const rotateX = useSpring(
-    useTransform(scrollYProgress, [0, 0.3], [8, 0]),
-    springConfig
-  );
-  const opacity = useSpring(
-    useTransform(scrollYProgress, [0, 0.25], [0.45, 1]),
-    springConfig
-  );
-  const rotateZ = useSpring(
-    useTransform(scrollYProgress, [0, 0.3], [10, 0]),
-    springConfig
-  );
-  const translateY = useSpring(
-    useTransform(scrollYProgress, [0, 0.3], [-260, 160]),
-    springConfig
-  );
+  const translateX = useSpring(useTransform(scrollYProgress, [0, 1], [0, narrow ? 400 : 700]), springConfig);
+  const translateXReverse = useSpring(useTransform(scrollYProgress, [0, 1], [0, narrow ? -400 : -700]), springConfig);
+  const rotateX = useSpring(useTransform(scrollYProgress, [0, 0.2], [15, 0]), springConfig);
+  const opacity = useSpring(useTransform(scrollYProgress, [0, 0.2], [0.2, 1]), springConfig);
+  const rotateZ = useSpring(useTransform(scrollYProgress, [0, 0.2], [narrow ? 10 : 20, 0]), springConfig);
+  const translateY = useSpring(useTransform(scrollYProgress, [0, 0.12], narrow ? [-380, 0] : [-700, 0]), springConfig);
+
+  const gridStyle = reduceMotion ? undefined : { rotateX, rotateZ, translateY, opacity };
 
   return (
-    <div
-      ref={ref}
-      className="hero-parallax-wrapper"
-    >
+    <div ref={ref} className={`hero-parallax-wrapper${reduceMotion ? " is-static" : ""}`}>
       <Header
         title={title}
         subtitle={subtitle}
         primaryCtaText={primaryCtaText}
         secondaryCtaText={secondaryCtaText}
+        primaryCtaUrl={primaryCtaUrl}
+        secondaryCtaUrl={secondaryCtaUrl}
       />
 
-      <motion.div
-        style={{
-          rotateX,
-          rotateZ,
-          translateY,
-          opacity,
-        }}
-        className="hero-parallax-grid"
-      >
-        <motion.div className="hero-parallax-row hero-parallax-row-reverse">
-          {firstRow.map((product, idx) => (
-            <ProductCard
-              product={product}
-              translate={translateX}
-              key={`row1-${product.thumbnail}-${idx}`}
-            />
-          ))}
+      {total > 0 && (
+        <motion.div style={gridStyle} className="hero-parallax-grid">
+          <motion.div className="hero-parallax-row hero-parallax-row-reverse hero-parallax-row-right">
+            {firstRow.map((product, i, row) => (
+              <ProductCard product={product} priority={i < 2 || i >= row.length - 2} translate={reduceMotion ? undefined : translateX} key={product.title + product.thumbnail} />
+            ))}
+          </motion.div>
+          <motion.div className="hero-parallax-row">
+            {secondRow.map((product, i, row) => (
+              <ProductCard product={product} priority={i < 2 || i >= row.length - 2} translate={reduceMotion ? undefined : translateXReverse} key={product.title + product.thumbnail} />
+            ))}
+          </motion.div>
         </motion.div>
-
-        <motion.div className="hero-parallax-row">
-          {secondRow.map((product, idx) => (
-            <ProductCard
-              product={product}
-              translate={translateXReverse}
-              key={`row2-${product.thumbnail}-${idx}`}
-            />
-          ))}
-        </motion.div>
-      </motion.div>
+      )}
     </div>
   );
 };
@@ -161,24 +101,15 @@ function renderHeroTitle(title) {
     return title;
   }
 
-  if (typeof title === 'string') {
-    if (title.includes('<span') || title.includes('<strong') || title.includes('<em')) {
+  if (typeof title === "string") {
+    if (title.includes("<span") || title.includes("<strong") || title.includes("<em")) {
       return <span dangerouslySetInnerHTML={{ __html: title }} />;
     }
 
-    if (title.includes('Needs Next')) {
-      const parts = title.split('Needs Next');
-      return (
-        <>
-          {parts[0]}<span className="accent">Needs Next{parts[1] || ''}</span>
-        </>
-      );
-    }
-
-    const words = title.trim().split(' ');
+    const words = title.trim().split(" ");
     if (words.length >= 3) {
-      const main = words.slice(0, -2).join(' ');
-      const accent = words.slice(-2).join(' ');
+      const main = words.slice(0, -2).join(" ");
+      const accent = words.slice(-2).join(" ");
       return (
         <>
           {main} <span className="accent">{accent}</span>
@@ -192,30 +123,25 @@ function renderHeroTitle(title) {
   return title;
 }
 
-export const Header = ({ title, subtitle, primaryCtaText, secondaryCtaText }) => {
+export const Header = ({ title, subtitle, primaryCtaText, secondaryCtaText, primaryCtaUrl, secondaryCtaUrl }) => {
   return (
     <div className="hero-parallax-header">
-      <h1 className="hero-parallax-title">
-        {renderHeroTitle(title)}
-      </h1>
+      <h1 className="hero-parallax-title">{renderHeroTitle(title)}</h1>
 
       <p className="hero-parallax-desc">
         {subtitle ||
-          "From AI agents and automated workflows to web apps, mobile products, SaaS platforms, and growth marketing — we build practical digital solutions around the way your business works."}
+          "We help businesses get noticed, reach the right people and grow through digital marketing, app development and smarter technology."}
       </p>
 
       <div className="hero-parallax-actions">
         <NoiseButton
-          href="/contact"
+          href={primaryCtaUrl || "/contact"}
           icon={<ArrowRight size={16} strokeWidth={1.75} aria-hidden="true" />}
         >
           {primaryCtaText || "Start a Project"}
         </NoiseButton>
 
-        <Link
-          href="/portfolio"
-          className="hero-parallax-btn-secondary"
-        >
+        <Link href={secondaryCtaUrl || "/portfolio"} className="hero-parallax-btn-secondary">
           <span>{secondaryCtaText || "See Our Work"}</span>
           <ArrowRight size={16} strokeWidth={1.75} aria-hidden="true" />
         </Link>
@@ -224,51 +150,34 @@ export const Header = ({ title, subtitle, primaryCtaText, secondaryCtaText }) =>
   );
 };
 
-export const ProductCard = ({
-  product,
-  translate,
-}) => {
+export const ProductCard = ({ product, translate, priority = false }) => {
+  const external = /^https?:\/\//i.test(product.link || "");
+  const LinkTag = external ? "a" : Link;
+  const linkProps = external
+    ? { href: product.link, target: "_blank", rel: "noopener noreferrer" }
+    : { href: product.link || "/portfolio" };
+
   return (
     <motion.div
-      style={{
-        x: translate,
-      }}
-      whileHover={{
-        y: -20,
-      }}
-      key={product.title}
+      style={translate ? { x: translate } : undefined}
+      whileHover={{ y: -20 }}
       className="hero-parallax-card"
     >
-      <Link
-        href={product.link}
-        target={product.link.startsWith("http") ? "_blank" : undefined}
-        rel={product.link.startsWith("http") ? "noopener noreferrer" : undefined}
-        className="hero-parallax-card-link"
-      >
-        <img
+      <LinkTag {...linkProps} className="hero-parallax-card-link" aria-label={product.title}>
+        <SmartImg
+          sizes="(max-width: 768px) 70vw, 480px"
           src={product.thumbnail}
           alt={product.title}
           className="hero-parallax-card-img"
           loading="eager"
+          fetchPriority={priority ? "high" : "auto"}
           decoding="async"
-          width="450"
-          height="280"
+          width="480"
+          height="384"
         />
-        <div className="hero-parallax-card-overlay">
-          <h2 className="hero-parallax-card-title">
-            {product.title}
-          </h2>
-        </div>
-        <div className="hero-parallax-card-bottom">
-          <p className="hero-parallax-card-bottom-title">{product.title}</p>
-        </div>
-      </Link>
+      </LinkTag>
+      <div className="hero-parallax-card-shade" />
+      <h2 className="hero-parallax-card-title">{product.title}</h2>
     </motion.div>
   );
 };
-
-export function HeroParallaxDemo() {
-  return <HeroParallax products={products} />;
-}
-
-export default HeroParallax;

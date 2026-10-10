@@ -17,11 +17,11 @@ export default function CTABanner({
   const cms = useCMSData();
   const ctaSec = (cms.sections || []).find((s) => s.sectionKey === 'cta');
 
-  const activeTitle = title || ctaSec?.heading || "Let's build something useful.";
-  const activeSubtitle = subtitle || ctaSec?.description || "Have an idea, a workflow that needs fixing, or a product you've been meaning to build? Tell us about it.";
-  const activePrimaryText = primaryBtnText || ctaSec?.ctaLabel || "Start a Project";
+  const activeTitle = title || ctaSec?.heading || "Have Something Worth Building?";
+  const activeSubtitle = subtitle || ctaSec?.description || "Tell us what you're planning, what needs improving or what you'd like to create. Let's discuss the right way forward.";
+  const activePrimaryText = primaryBtnText || ctaSec?.ctaLabel || "Start a Conversation";
   const activePrimaryHref = primaryBtnHref || ctaSec?.ctaUrl || "/contact";
-  const activeSecondaryText = secondaryBtnText || "See Our Work";
+  const activeSecondaryText = secondaryBtnText || "View Our Work";
   const activeSecondaryHref = secondaryBtnHref || "/portfolio";
 
   return (

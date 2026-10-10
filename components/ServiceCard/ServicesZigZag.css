@@ -241,3 +241,158 @@
   letter-spacing: 0.1em;
   color: var(--accent, #008de4);
 }
+
+/* ─── Compact variant: image-led grid cards ─── */
+.services-zigzag-list.is-compact {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(310px, 100%), 1fr));
+  gap: 24px;
+}
+
+.services-zigzag-list.is-compact .service-zigzag-card,
+.services-zigzag-list.is-compact .service-zigzag-card.is-reversed {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(20, 26, 40, 0.88) 0%, rgba(12, 16, 26, 0.92) 100%);
+}
+
+/* brand gradient hairline that lights up on hover */
+.services-zigzag-list.is-compact .service-zigzag-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: var(--gradient-brand, linear-gradient(90deg, #ff5733, #fbb040, #008de4));
+  opacity: 0;
+  z-index: 3;
+  transition: opacity 0.35s ease;
+}
+
+.services-zigzag-list.is-compact .service-zigzag-card:hover::before {
+  opacity: 1;
+}
+
+/* image on top */
+.services-zigzag-list.is-compact .service-zigzag-media {
+  order: -1;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.services-zigzag-list.is-compact .service-zigzag-media-overlay {
+  background: linear-gradient(to top, rgba(10, 13, 20, 0.85) 0%, rgba(10, 13, 20, 0.15) 55%, transparent 100%);
+}
+
+/* text block */
+.services-zigzag-list.is-compact .service-zigzag-content {
+  flex: 1;
+  gap: 10px;
+  padding: 22px 24px 24px;
+}
+
+.services-zigzag-list.is-compact .service-zigzag-title {
+  font-size: clamp(1.2rem, 1.5vw, 1.4rem);
+}
+
+/* the whole card is clickable through the title link */
+.services-zigzag-list.is-compact .service-zigzag-title a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.services-zigzag-list.is-compact .service-zigzag-tagline {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.services-zigzag-list.is-compact .service-zigzag-desc {
+  font-size: 0.875rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.services-zigzag-list.is-compact .service-zigzag-tags {
+  display: none;
+}
+
+/* call to action: matches the site's pill buttons, with the brand-gradient hover */
+.services-zigzag-list.is-compact .service-zigzag-action {
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.services-zigzag-list.is-compact .service-zigzag-btn {
+  position: relative;
+  z-index: 3;
+  isolation: isolate;
+  overflow: hidden;
+  width: 100%;
+  justify-content: space-between;
+  padding: 12px 22px;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.services-zigzag-list.is-compact .service-zigzag-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--gradient-brand, linear-gradient(135deg, #ff5733 0%, #ff8c38 25%, #fbb040 50%, #008de4 75%, #00b862 100%));
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.services-zigzag-list.is-compact .service-zigzag-btn svg {
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+
+.services-zigzag-list.is-compact .service-zigzag-card:hover .service-zigzag-btn,
+.services-zigzag-list.is-compact .service-zigzag-btn:hover,
+.services-zigzag-list.is-compact .service-zigzag-btn:focus-visible {
+  border-color: transparent;
+  box-shadow: 0 8px 25px rgba(255, 140, 56, 0.22), 0 8px 25px rgba(0, 141, 228, 0.22);
+  transform: none;
+}
+
+.services-zigzag-list.is-compact .service-zigzag-card:hover .service-zigzag-btn::before,
+.services-zigzag-list.is-compact .service-zigzag-btn:hover::before,
+.services-zigzag-list.is-compact .service-zigzag-btn:focus-visible::before {
+  opacity: 1;
+}
+
+.services-zigzag-list.is-compact .service-zigzag-card:hover .service-zigzag-btn svg,
+.services-zigzag-list.is-compact .service-zigzag-btn:focus-visible svg {
+  transform: translateX(3px);
+}
+
+.services-zigzag-list.is-compact .service-zigzag-btn:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .services-zigzag-list.is-compact .service-zigzag-img,
+  .services-zigzag-list.is-compact .service-zigzag-card {
+    transition: none;
+  }
+}

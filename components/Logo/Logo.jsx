@@ -42,6 +42,8 @@ export default function Logo({ size = 30, showText = true, className = "", alt =
       <img
         src="/logo-ideatex.png"
         alt={alt}
+        width={typeof size === 'number' ? Math.round(size * 2.5) : undefined}
+        height={typeof size === 'number' ? size : undefined}
         style={{
           height: logoHeight,
           width: 'auto',

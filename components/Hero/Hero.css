@@ -1,9 +1,10 @@
-/* ─── Aceternity Hero Parallax Styles: Ideate X Palette ─── */
+/* ─── Hero Parallax (scroll-driven 3D card rows): Ideate X palette ─── */
 .hero-parallax-wrapper {
   position: relative;
-  height: 120vh;
-  min-height: 980px;
-  padding: 0 0 60px 0;
+  /* height follows the content (header + card rows), so no empty space is left while scrolling */
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 0 0 3rem;
   overflow: hidden;
   background-color: var(--bg-primary, #0a0d14);
   perspective: 1000px;
@@ -11,6 +12,12 @@
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+}
+
+/* reduced motion: no scroll choreography, the rows simply sit below the header */
+.hero-parallax-wrapper.is-static {
+  min-height: 0;
+  padding-bottom: 80px;
 }
 
 .hero-parallax-header {
@@ -110,19 +117,17 @@
 
 .hero-parallax-grid {
   position: relative;
+  z-index: 5;
   width: 100%;
   transform-style: preserve-3d;
   will-change: transform, opacity;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  pointer-events: auto;
-  margin-top: 0;
 }
 
 .hero-parallax-row {
   display: flex;
-  gap: 24px;
+  flex-direction: row;
+  gap: 5rem;
+  margin-bottom: 5rem;
   width: max-content;
   will-change: transform;
 }
@@ -131,19 +136,34 @@
   flex-direction: row-reverse;
 }
 
+.hero-parallax-row:last-child {
+  margin-bottom: 0;
+}
+
+/* rows that slide to the right start further left, so their left edge never shows a gap */
+.hero-parallax-row-right {
+  margin-left: -420px;
+}
+
+.hero-parallax-wrapper.is-static .hero-parallax-row-right {
+  margin-left: 0;
+}
+
 .hero-parallax-card {
   position: relative;
-  width: 450px;
-  height: 280px;
+  width: 30rem;
+  height: 24rem;
+  flex-shrink: 0;
   border-radius: 16px;
   overflow: hidden;
-  flex-shrink: 0;
   background: #0d111d;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
-  cursor: pointer;
-  transform-origin: center center;
-  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+  /* placeholder tint while the screenshot loads, and a stable layer to avoid flicker in 3D */
+  background: linear-gradient(135deg, rgba(0, 141, 228, 0.12), rgba(255, 87, 51, 0.1)), #0d111d;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .hero-parallax-card:hover {
@@ -153,11 +173,8 @@
 
 .hero-parallax-card-link {
   display: block;
-  width: 100%;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-  background: #0b0e18;
+  position: absolute;
+  inset: 0;
 }
 
 .hero-parallax-card-img {
@@ -166,98 +183,96 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
-  filter: brightness(0.96) contrast(1.04);
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+  object-position: left top;
+  display: block;
 }
 
-.hero-parallax-card:hover .hero-parallax-card-img {
-  transform: scale(1.05);
-  filter: brightness(1.06);
-}
-
-.hero-parallax-card-overlay {
+.hero-parallax-card-shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.88) 100%);
+  background: #000000;
   opacity: 0;
-  transition: opacity 0.3s ease;
   pointer-events: none;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 20px;
-  z-index: 10;
+  transition: opacity 0.3s ease;
 }
 
-.hero-parallax-card:hover .hero-parallax-card-overlay {
-  opacity: 1;
+.hero-parallax-card:hover .hero-parallax-card-shade {
+  opacity: 0.8;
 }
 
 .hero-parallax-card-title {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  margin: 0;
   font-family: var(--font-heading, inherit);
   font-size: 1.15rem;
   font-weight: 700;
   color: #ffffff;
-  margin: 0;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
-}
-
-.hero-parallax-card-bottom {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 12px 18px;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.78) 0%, transparent 100%);
-  z-index: 5;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-}
-
-.hero-parallax-card:hover .hero-parallax-card-bottom {
   opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
-.hero-parallax-card-bottom-title {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.92);
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.hero-parallax-card:hover .hero-parallax-card-title {
+  opacity: 1;
 }
 
 @media (max-width: 1024px) {
+  .hero-parallax-row {
+    gap: 3rem;
+    margin-bottom: 3rem;
+  }
+
   .hero-parallax-card {
-    width: 380px;
-    height: 240px;
+    width: 24rem;
+    height: 19rem;
+  }
+
+  .hero-parallax-row-right {
+    margin-left: -300px;
   }
 }
 
 @media (max-width: 768px) {
   .hero-parallax-wrapper {
-    height: auto;
-    min-height: 100vh;
-    padding: 0 0 50px 0;
+    padding-bottom: 2rem;
   }
 
   .hero-parallax-header {
-    padding: clamp(90px, 12vh, 115px) var(--container-padding, 5vw) 16px var(--container-padding, 5vw);
-  }
-
-  .hero-parallax-card {
-    width: 300px;
-    height: 190px;
-    border-radius: 12px;
-  }
-
-  .hero-parallax-grid {
-    gap: 16px;
+    padding-top: clamp(90px, 12vh, 115px);
   }
 
   .hero-parallax-row {
-    gap: 16px;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-parallax-card {
+    width: 17rem;
+    height: 13.5rem;
+    border-radius: 12px;
+  }
+
+  .hero-parallax-row-right {
+    margin-left: -250px;
+  }
+}
+
+/* the accent words drift through the brand gradient */
+.hero-parallax-title .accent {
+  background-size: 200% 100%;
+  animation: heroAccentDrift 8s ease-in-out infinite;
+}
+
+@keyframes heroAccentDrift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-parallax-title .accent {
+    animation: none;
   }
 }

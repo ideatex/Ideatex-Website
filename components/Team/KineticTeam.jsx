@@ -22,13 +22,13 @@ const DEFAULT_TEAM = [
   {
     id: "02",
     name: "Sudharsan",
-    role: "Business Strategist",
+    role: "Growth Strategist",
     image: "/sudharsan.jpg",
   },
   {
     id: "03",
     name: "Amal Alex",
-    role: "Software Developer",
+    role: "Full-stack Developer",
     image: "/amal.jpg",
   },
 ];
@@ -87,7 +87,7 @@ export function KineticTeamHybrid() {
         >
           <div className="kinetic-team-title-wrap">
             <h2 className="kinetic-team-title">
-              Creative <span className="accent-text">Talent</span>
+              Creative <span className="accent-text">Talents</span>
             </h2>
           </div>
         </motion.div>

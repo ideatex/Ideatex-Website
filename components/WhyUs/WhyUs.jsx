@@ -11,42 +11,30 @@ import {
 } from "lucide-react";
 import "./WhyUs.css";
 
-const FEATURES = [
+export const FEATURES = [
   {
-    icon: Users,
-    title: "Direct Senior Collaboration",
+    icon: CheckCircle2,
+    title: "Technology With Purpose",
     description:
-      "Partner directly with lead engineers and architects who design, build, and deploy your codebase — zero sales middlemen.",
+      "Applications, AI and automation built around real requirements.",
   },
   {
     icon: Zap,
-    title: "Rapid Bi-Weekly Sprints",
+    title: "Growth With Direction",
     description:
-      "Projects move in predictable 2-week agile sprints with live staging deployments and interactive walkthroughs.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "100% Code & IP Ownership",
-    description:
-      "Complete commercial IP rights, GitHub repository access, Figma design tokens, and cloud configs from day one.",
-  },
-  {
-    icon: CheckCircle2,
-    title: "Production-Grade Standards",
-    description:
-      "Strict TypeScript safety, modular component systems, automated tests, and robust CI/CD deployment pipelines.",
+      "Digital marketing focused on visibility, relevance and meaningful business goals.",
   },
   {
     icon: Layers,
-    title: "Modern Scalable Architecture",
+    title: "Creative Thinking",
     description:
-      "Modern web and mobile architectures built on Next.js, React, Node.js, and cloud platforms with zero legacy debt.",
+      "Content and visuals shaped around your brand, product and audience.",
   },
   {
-    icon: LifeBuoy,
-    title: "Full Lifecycle Support",
+    icon: Users,
+    title: "A Practical Approach",
     description:
-      "From technical discovery and UX design to production launch, uptime monitoring, security, and continuous evolution.",
+      "Clear communication, considered decisions and a focus on getting the work done.",
   },
 ];
 
@@ -55,10 +43,10 @@ export default function WhyUs() {
     <section className="why-us-section" id="why-partner-with-us">
       <div className="why-us-container">
         <h2 className="why-us-title">
-          Why Partner With Us
+          One Partner. Three Ways to Move Forward.
         </h2>
         <p className="why-us-subtitle">
-          Engineering impact without overhead — architecting, building, and deploying mission-critical software and AI systems.
+          Creative production, digital marketing and development, working together under one roof.
         </p>
 
         <div className="why-us-grid">

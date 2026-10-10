@@ -279,3 +279,10 @@
     padding: 20px 0 28px 0;
   }
 }
+
+/* Comfortable tap targets for the legal links on touch screens */
+.footer-bottom-link {
+  display: inline-block;
+  padding: 10px 4px;
+  margin: -10px -4px;
+}

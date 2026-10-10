@@ -1,5 +1,8 @@
 /* ─── Global Studio Button Pill (Matching "View Our Work" Hero Button) ─── */
 .studio-btn-pill {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -23,12 +26,26 @@
   line-height: 1.2;
 }
 
+.studio-btn-pill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--gradient-brand, linear-gradient(135deg, #ff5733 0%, #ff8c38 25%, #fbb040 50%, #008de4 75%, #00b862 100%));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
 .studio-btn-pill:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: var(--accent, #008de4);
+  border-color: transparent;
   color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 141, 228, 0.2);
+  box-shadow: 0 8px 25px rgba(255, 140, 56, 0.22), 0 8px 25px rgba(0, 141, 228, 0.22);
+}
+
+.studio-btn-pill:hover::before,
+.studio-btn-pill:focus-visible::before {
+  opacity: 1;
 }
 
 .studio-btn-pill:active {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import SmartImg from '../../components/SmartImg';
 import Link from 'next/link';
 import PageHero from '../../components/PageHero/PageHero';
 import SectionHeading from '../../components/SectionHeading/SectionHeading';
@@ -13,7 +14,6 @@ import {
   Cpu, TrendingUp, Megaphone, Server, Compass,
   Terminal, MessageSquare, ArrowRight
 } from 'lucide-react';
-import { NoiseButton } from '../../components/ui/NoiseButton';
 import { SERVICES_DATA } from '../../constants/servicesData';
 import { useCMSData } from '../../lib/cms-client';
 import '../../components/ServiceCard/ServicesZigZag.css';
@@ -45,8 +45,25 @@ const defaultServicesList = Object.values(SERVICES_DATA).map((s) => ({
   tags: s.deliverables ? s.deliverables.map((d) => d.title).slice(0, 4) : ['Production Engineering', 'Scalable Architecture'],
 }));
 
+const PILLARS = [
+  {
+    key: 'development',
+    heading: 'Technology Built Around Your Business.',
+    description: 'Develop applications, digital products and connected systems that solve practical problems and support the way your business operates.',
+  },
+  {
+    key: 'marketing',
+    heading: 'Be Easier to Find. Harder to Forget.',
+    description: 'Improve search visibility, build brand awareness and engage the right audience, then strengthen how your marketing performs.',
+  },
+  {
+    key: 'creative',
+    heading: 'Give Your Brand Something to Say.',
+    description: 'Create stronger first impressions through product photography, carefully edited video and promotional content.',
+  },
+];
+
 export default function Services() {
-  const [selectedCategory, setSelectedCategory] = useState('All');
   const mainRef = useScrollReveal();
 
   const cms = useCMSData();
@@ -54,10 +71,12 @@ export default function Services() {
 
   const allServices = (dynamicServices && dynamicServices.length > 0)
     ? dynamicServices.map((s, idx) => {
-        const fallback = defaultServicesList.find((def) => def.slug === s.slug) || defaultServicesList[idx % defaultServicesList.length];
+        const fallback = defaultServicesList.find((def) => def.slug === s.slug) || defaultServicesList[idx % defaultServicesList.length] || {};
         const iconComp = typeof s.icon === 'function' ? s.icon : (ICON_MAP[s.iconName] || fallback.icon || Bot);
         return {
           slug: s.slug,
+          pillar: s.pillar || 'development',
+          hidden: s.showInOverview === false,
           category: s.category || fallback.category || 'Engineering',
           icon: iconComp,
           title: s.title || fallback.title,
@@ -70,35 +89,27 @@ export default function Services() {
       })
     : defaultServicesList;
 
-  // Extract all distinct categories
-  const categoriesList = ['All', ...Array.from(new Set(allServices.map((s) => s.category).filter(Boolean)))];
-
-  const filtered = selectedCategory === 'All'
-    ? allServices
-    : allServices.filter((s) =>
-        s.category?.toLowerCase() === selectedCategory.toLowerCase() ||
-        s.category?.toLowerCase().includes(selectedCategory.toLowerCase())
-      );
+  const visibleServices = allServices.filter((s) => !s.hidden);
 
   return (
     <main className="services-page">
       <PageHero 
         breadcrumb={[{ path: '/', label: 'Home' }, { label: 'Services' }]}
-        title={<>You bring the problem. <span className="accent">We build the solution.</span></>}
-        subtitle="From AI agents and workflow automation to apps, SaaS, integrations, and digital growth — we build technology around the way your business works."
+        title={<>Everything Starts With <span className="accent">a Clear Purpose.</span></>}
+        subtitle="From creating brand content to growing your online presence and developing custom technology, we bring together the services businesses need to move forward."
         backgroundImage="https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=1920&h=1080&auto=format&q=85&fit=crop"
         widget={
-          <div className="hero-widget-glass" style={{ minWidth: '280px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div className="hero-widget-glass" style={{ width: '300px', maxWidth: '100%', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <p style={{ fontSize: '0.95rem', fontWeight: 600, color: '#ffffff', margin: 0, lineHeight: 1.4 }}>
-              Full Lifecycle Support
+              Create. Grow. Build.
             </p>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-body)', margin: 0, lineHeight: 1.5 }}>
-              From architecture planning and system design to production engineering and ongoing maintenance.
+              Creative production, digital marketing and development, working together from the first idea to the finished work.
             </p>
             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '10px' }}>
-              <span style={{ fontSize: '0.75rem', padding: '3px 8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', color: 'var(--text-muted)' }}>Discovery</span>
+              <span style={{ fontSize: '0.75rem', padding: '3px 8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', color: 'var(--text-muted)' }}>Create</span>
+              <span style={{ fontSize: '0.75rem', padding: '3px 8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', color: 'var(--text-muted)' }}>Grow</span>
               <span style={{ fontSize: '0.75rem', padding: '3px 8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', color: 'var(--text-muted)' }}>Build</span>
-              <span style={{ fontSize: '0.75rem', padding: '3px 8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', color: 'var(--text-muted)' }}>Support</span>
             </div>
           </div>
         }
@@ -107,94 +118,79 @@ export default function Services() {
       {/* Services List Section */}
       <section className="section" ref={mainRef}>
         <div className="container visible reveal">
-          <SectionHeading>
-            <h2 className="section-title">Core Capabilities</h2>
-          </SectionHeading>
+          {PILLARS.map((pillar) => {
+            const group = visibleServices.filter((svc) => svc.pillar === pillar.key);
+            if (group.length === 0) return null;
+            return (
+              <div key={pillar.key} id={pillar.key} style={{ scrollMarginTop: '110px', marginBottom: 'clamp(64px, 9vw, 112px)' }}>
+                <SectionHeading>
+                  <h2 className="section-title">{pillar.heading}</h2>
+                </SectionHeading>
 
-          <p style={{ maxWidth: '680px', color: 'var(--text-body)', fontSize: '1.1rem', marginBottom: 'var(--space-xl)', lineHeight: 1.6 }}>
-            Explore our engineering, design, AI automation, and product growth capabilities. Click any service to view full technical specifications, tech stacks, and deliverables.
-          </p>
+                <p style={{ maxWidth: '680px', color: 'var(--text-body)', fontSize: '1.1rem', marginBottom: 'var(--space-xl)', lineHeight: 1.6 }}>
+                  {pillar.description}
+                </p>
 
-          {/* Filter tabs */}
-          <div className="portfolio-filters" style={{ marginBottom: 'var(--space-2xl)' }}>
-            {categoriesList.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                className={`filter-btn ${selectedCategory === cat ? 'active' : ''}`}
-                onClick={() => setSelectedCategory(cat)}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
+            <div className="services-zigzag-list is-compact">
+              {group.map((service, index) => {
+                const isReversed = index % 2 === 1;
 
-          {/* Zig-Zag Services Showcase */}
-          <div className="services-zigzag-list">
-            {filtered.map((service, index) => {
-              const IconComp = service.icon || Bot;
-              const isReversed = index % 2 === 1;
-              const indexNum = String(index + 1).padStart(2, '0');
+                return (
+                  <article
+                    key={`${service.slug}-${index}`}
+                    className={`service-zigzag-card ${isReversed ? 'is-reversed' : ''}`}
+                  >
+                    {/* Content Side */}
+                    <div className="service-zigzag-content">
+                      <h3 className="service-zigzag-title">
+                        <Link href={`/services/${service.slug}`}>
+                          {service.title}
+                        </Link>
+                      </h3>
 
-              return (
-                <article
-                  key={`${service.slug}-${index}`}
-                  className={`service-zigzag-card ${isReversed ? 'is-reversed' : ''}`}
-                >
-                  {/* Content Side */}
-                  <div className="service-zigzag-content">
-                    <h3 className="service-zigzag-title">
-                      <Link href={`/services/${service.slug}`}>
-                        {service.title}
-                      </Link>
-                    </h3>
+                      <p className="service-zigzag-tagline">
+                        {service.tagline}
+                      </p>
 
-                    <p className="service-zigzag-tagline">
-                      {service.tagline}
-                    </p>
+                      <p className="service-zigzag-desc">
+                        {service.description}
+                      </p>
 
-                    <p className="service-zigzag-desc">
-                      {service.description}
-                    </p>
+                      {service.tags && service.tags.length > 0 && (
+                        <div className="service-zigzag-tags">
+                          {service.tags.map((tag) => (
+                            <span key={tag} className="service-zigzag-tag">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
 
-                    {service.tags && service.tags.length > 0 && (
-                      <div className="service-zigzag-tags">
-                        {service.tags.map((tag) => (
-                          <span key={tag} className="service-zigzag-tag">
-                            {tag}
-                          </span>
-                        ))}
+                      <div className="service-zigzag-action">
+                        <Link href={`/services/${service.slug}`} className="service-zigzag-btn">
+                          <span>Explore Service</span>
+                          <ArrowRight size={15} strokeWidth={2} aria-hidden="true" />
+                        </Link>
                       </div>
-                    )}
-
-                    <div className="service-zigzag-action">
-                      <Link href={`/services/${service.slug}`} className="service-zigzag-btn">
-                        <span>View Technical Specifications</span>
-                        <ArrowRight size={15} strokeWidth={2} aria-hidden="true" />
-                      </Link>
                     </div>
-                  </div>
 
-                  {/* Media / Image Side */}
-                  <div className="service-zigzag-media">
-                    <img
-                      src={service.image}
-                      alt={service.imageAlt || service.title}
-                      className="service-zigzag-img"
-                      loading="lazy"
-                    />
-                    <div className="service-zigzag-media-overlay" />
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'var(--space-2xl)' }}>
-            <NoiseButton href="/contact" icon={<ArrowRight size={16} strokeWidth={1.75} aria-hidden="true" />}>
-              Discuss Your Project
-            </NoiseButton>
-          </div>
+                    {/* Media / Image Side */}
+                    <div className="service-zigzag-media">
+                      <SmartImg sizes="(max-width: 900px) 100vw, 560px"
+                        src={service.image}
+                        alt={service.imageAlt || service.title}
+                        className="service-zigzag-img"
+                        loading="lazy"
+                      />
+                      <div className="service-zigzag-media-overlay" />
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 

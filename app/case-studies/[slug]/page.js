@@ -10,6 +10,8 @@ import {
   Sparkles,
   Layers,
 } from "lucide-react";
+import JsonLd from "../../../components/JsonLd";
+import { breadcrumbJsonLd } from "../../../lib/schema";
 import PageHero from "../../../components/PageHero/PageHero";
 import SectionHeading from "../../../components/SectionHeading/SectionHeading";
 import CTABanner from "../../../components/CTABanner/CTABanner";
@@ -22,6 +24,8 @@ import {
 import {
   getServerCaseStudyBySlug,
   getServerCaseStudies,
+  buildMetadata,
+  getSiteBase,
 } from "../../../lib/cms-server";
 import "../../../components/CaseStudy/CaseStudy.css";
 
@@ -51,10 +55,13 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  return {
-    title: `${study.title} — Ideate X Case Study`,
-    description: study.subtitle || study.summary,
-  };
+  return buildMetadata({
+    title: study.seoTitle || `${study.title} — Ideate X Case Study`,
+    description: study.seoDescription || study.subtitle || study.summary,
+    path: `/case-studies/${study.slug}`,
+    image: study.ogImage || (typeof study.image === 'object' ? study.image?.src : study.image),
+    canonical: study.canonicalUrl,
+  });
 }
 
 export default async function CaseStudyDetailPage({ params }) {
@@ -73,8 +80,27 @@ export default async function CaseStudyDetailPage({ params }) {
   const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % allStudies.length : 0;
   const nextStudy = allStudies[nextIndex];
 
+  const base = getSiteBase();
+  const rawImage = (typeof study.image === 'object' ? study.image?.src : study.image) || study.coverBanner || '/logo-ideatex.png';
+  const articleLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: study.title,
+    description: study.seoDescription || study.subtitle || study.summary,
+    image: /^https?:/i.test(rawImage) ? rawImage : `${base}${rawImage.startsWith('/') ? '' : '/'}${rawImage}`,
+    datePublished: study.createdAt || (study.year ? `${study.year}-01-01` : undefined),
+    dateModified: study.updatedAt || study.createdAt,
+    author: { '@type': 'Organization', name: 'Ideate X', url: base },
+    publisher: { '@type': 'Organization', name: 'Ideate X', logo: { '@type': 'ImageObject', url: `${base}/logo-ideatex.png` } },
+    mainEntityOfPage: `${base}/case-studies/${study.slug}`,
+    about: study.client,
+    ...(study.focusKeyword ? { keywords: study.focusKeyword } : {}),
+  };
+
   return (
     <main className="case-detail-page">
+      <JsonLd data={articleLd} />
+      <JsonLd data={breadcrumbJsonLd(base, [{ name: 'Home', path: '/' }, { name: 'Case Studies', path: '/case-studies' }, { name: study.title, path: `/case-studies/${study.slug}` }])} />
       <PageHero
         breadcrumb={[
           { path: "/", label: "Home" },
@@ -399,7 +425,7 @@ export default async function CaseStudyDetailPage({ params }) {
       {/* Case Study Specific CTA Banner */}
       <CTABanner
         title={study.ctaHeading || "Ready to build something impactful?"}
-        subtitle={study.ctaText || "Let's turn your workflow into a connected high-performance software system."}
+        subtitle={study.ctaText || "Let's turn your workflow into a connected high-performance digital system."}
         badgeText="CASE STUDY CTA"
         primaryBtnText="Let's Talk"
         primaryBtnHref="/contact"

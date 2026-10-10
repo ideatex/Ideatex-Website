@@ -4,10 +4,14 @@ import { ReactLenis } from 'lenis/react';
 import { usePathname } from 'next/navigation';
 import Navbar from './Navbar/Navbar';
 import Footer from './Footer/Footer';
-import CustomCursor from './CustomCursor/CustomCursor';
+import dynamic from 'next/dynamic';
 import PageLoader from './PageLoader/PageLoader';
 import PageMetaSync from './PageMetaSync/PageMetaSync';
-import Chatbot from './Chatbot/Chatbot';
+
+// Non-critical widgets load after the page is interactive
+const CustomCursor = dynamic(() => import('./CustomCursor/CustomCursor'), { ssr: false });
+const Chatbot = dynamic(() => import('./Chatbot/Chatbot'), { ssr: false });
+const WhatsAppButton = dynamic(() => import('./WhatsAppButton/WhatsAppButton'), { ssr: false });
 
 import { CMSProvider } from '@/lib/cms-client';
 
@@ -32,6 +36,7 @@ export default function ClientWrapper({ initialCmsData, children }) {
         <Navbar />
         {children}
         <Chatbot />
+        <WhatsAppButton />
         <Footer />
       </ReactLenis>
     </CMSProvider>

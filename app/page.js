@@ -1,73 +1,60 @@
 "use client";
 
 import Hero from '../components/Hero/Hero';
-import MarqueeTicker from '../components/MarqueeTicker/MarqueeTicker';
-import PortfolioCard from '../components/PortfolioCard/PortfolioCard';
-import LogoCloud from '../components/LogoCloud/LogoCloud';
-import CTABanner from '../components/CTABanner/CTABanner';
-import FAQAccordion from '../components/FAQAccordion/FAQAccordion';
+import dynamic from 'next/dynamic';
+import { useCMSData } from '../lib/cms-client';
 import SectionHeading from '../components/SectionHeading/SectionHeading';
-import SpotlightCard from '../components/SpotlightCard/SpotlightCard';
-import ProcessSteps from '../components/ProcessSteps/ProcessSteps';
 import VerticalTabs from '../components/ui/vertical-tabs';
 import { useScrollReveal } from '../hooks/useScrollReveal';
-import { IMAGES } from '../constants/images';
-import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { NoiseButton } from '../components/ui/NoiseButton';
-import WhyUs from '../components/WhyUs/WhyUs';
-import HomeCaseStudies from '../components/HomeCaseStudies/HomeCaseStudies';
 
-import { useCMSData } from '../lib/cms-client';
+// Below-the-fold sections load as separate chunks so the first screen becomes interactive sooner
+const WhyUs = dynamic(() => import('../components/WhyUs/WhyUs'));
+const HomeCaseStudies = dynamic(() => import('../components/HomeCaseStudies/HomeCaseStudies'));
+const FAQAccordion = dynamic(() => import('../components/FAQAccordion/FAQAccordion'));
+const CTABanner = dynamic(() => import('../components/CTABanner/CTABanner'));
+const ProjectShowcase = dynamic(() => import('../components/ui/project-showcase'));
+const TechOrbit = dynamic(() => import('../components/TechOrbit/TechOrbit'));
+const LogoCloudSwap = dynamic(() => import('../components/ui/logo-cloud-swap'));
 
-const defaultCapabilities = [
+
+const PILLAR_TABS = [
   {
-    id: "01",
-    title: "AI Agentic Systems",
-    category: "AI & Automation",
-    description: "Practical AI agents and automated workflows connecting your tools and data.",
-    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&auto=format&q=80&fit=crop",
-    link: "/services/ai-agentic-development",
+    id: "development",
+    name: "Software, AI & Product Development",
+    imageAlt: "Code on a developer screen",
+    title: "Build What Your Business Needs Next.",
+    description:
+      "From custom applications and SaaS products to AI agents, automation and connected systems, we develop technology around real business requirements.",
+    items: ["AI Agentic Development", "Workflow Automations", "Chatbot Development", "Custom Apps Development", "Mobile Apps Development", "Web Development", "SaaS Development", "API Integrations"],
+    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=900&h=1100&auto=format&q=80&fit=crop",
+    link: "/services#development",
+    ctaLabel: "Explore Development Services",
   },
   {
-    id: "02",
-    title: "SaaS Platform Engineering",
-    category: "Engineering",
-    description: "Multi-tenant SaaS architectures, Stripe subscription billing, and cloud infrastructure.",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&auto=format&q=80&fit=crop",
-    link: "/services/saas-development",
+    id: "marketing",
+    name: "Digital Marketing & Growth",
+    imageAlt: "Social media marketing on a laptop and phone",
+    title: "Get Seen by the Right People.",
+    description:
+      "We help businesses improve search visibility, build brand awareness and engage relevant audiences, and strengthen marketing performance and conversion opportunities.",
+    items: ["Search Engine Optimization", "Ad Campaigns & Brand Engagement", "Growth Marketing & Conversion Optimization"],
+    image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=900&h=1100&auto=format&q=80&fit=crop",
+    link: "/services#marketing",
+    ctaLabel: "Explore Digital Marketing",
   },
   {
-    id: "03",
-    title: "Modern Web Development",
-    category: "Engineering",
-    description: "High-performance web applications and digital interfaces built for speed and scale.",
-    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&auto=format&q=80&fit=crop",
-    link: "/services/web-development",
-  },
-  {
-    id: "04",
-    title: "Mobile App Development",
-    category: "Engineering",
-    description: "Cross-platform mobile applications engineered for iOS and Android with offline sync.",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&auto=format&q=80&fit=crop",
-    link: "/services/mobile-app-development",
-  },
-  {
-    id: "05",
-    title: "API & System Integration",
-    category: "Engineering",
-    description: "Connecting third-party APIs, payment gateways, databases, and internal workflows.",
-    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&auto=format&q=80&fit=crop",
-    link: "/services/api-system-integration",
-  },
-  {
-    id: "06",
-    title: "Digital Marketing & Growth",
-    category: "Growth",
-    description: "Data-driven demand generation, targeted acquisition funnels, and conversion optimization.",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&auto=format&q=80&fit=crop",
-    link: "/services/digital-marketing",
+    id: "creative",
+    name: "Creative Production",
+    imageAlt: "Photographer with a camera",
+    title: "Make Your Brand Worth a Closer Look.",
+    description:
+      "From product photography to polished video content, we create visuals that give your brand a clearer voice and a stronger presence.",
+    items: ["Product Photography & Shoots", "Video Editing & Post-Production", "Commercial & Promotional Videos"],
+    image: "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=900&h=1100&auto=format&q=80&fit=crop",
+    link: "/services#creative",
+    ctaLabel: "Explore Creative Production",
   },
 ];
 
@@ -75,6 +62,7 @@ const defaultProjects = [
   {
     title: 'CSAVA',
     category: 'SAAS & PLATFORMS',
+    description: 'A member and community platform for the Chartered Surveyors and Valuers Association, handling profiles, events and resources in one secure portal.',
     tags: ['Next.js', 'PostgreSQL', 'Supabase'],
     image: '/clients/CSAVA.png',
     link: 'https://csava.org',
@@ -82,13 +70,15 @@ const defaultProjects = [
   {
     title: 'Keyo',
     category: 'MOBILE APPS & PWA',
+    description: 'A progressive web app for smart key and access management, installable on any phone with real-time sync and offline support.',
     tags: ['Next.js', 'Prisma', 'Firebase', 'PWA'],
-    image: '/clients/Keyo.png',
+    image: '/clients/project-keyo.jpeg',
     link: 'https://keyo.co.in/en',
   },
   {
     title: 'SBE Builders',
     category: 'ENTERPRISE WEB PLATFORM',
+    description: 'A corporate web platform for a construction firm, showcasing projects and capabilities with fast pages and clear enquiry paths.',
     tags: ['Next.js', 'TypeScript', 'Tailwind'],
     image: '/clients/SBEBuilders.png',
     link: 'https://sbebuilders.in',
@@ -96,20 +86,23 @@ const defaultProjects = [
   {
     title: 'Sami V Landmarks',
     category: 'WEB APPLICATIONS',
+    description: 'An interactive real estate site that presents plots and layouts with rich visuals, so buyers can explore and enquire easily.',
     tags: ['React', 'Next.js', 'Interactive UI'],
-    image: '/clients/SamiVLandmarks.png',
+    image: '/clients/project-samivlandmarks.jpeg',
     link: 'https://samivlandmarks.in',
   },
   {
     title: 'Tifbox',
     category: 'MOBILE APPS & FOODTECH',
+    description: 'A food-tech app for tiffin subscriptions, with meal plans, order tracking and WhatsApp-based updates for customers.',
     tags: ['React Native', 'PWA', 'PostgreSQL', 'WhatsApp API'],
-    image: '/clients/Tifbox.png',
+    image: '/clients/project-tifbox.jpeg',
     link: 'https://tifboxmeals.com',
   },
   {
     title: 'Vevy.One',
     category: 'SAAS PLATFORM',
+    description: 'A multi-tenant SaaS platform that brings vendor workflows, data and dashboards into a single product.',
     tags: ['Next.js', 'Prisma', 'PostgreSQL'],
     image: '/clients/Vevy.One.png',
     link: 'https://vevyone.netlify.app',
@@ -117,8 +110,9 @@ const defaultProjects = [
   {
     title: 'Srinivas Packaging',
     category: 'MANUFACTURING & B2B',
+    description: 'A B2B portal for a packaging manufacturer, with a searchable product catalogue and a quote request engine.',
     tags: ['Next.js', 'B2B Portal', 'Product Catalogue', 'Quote Engine'],
-    image: '/clients/SrinivasPackaging.png',
+    image: '/clients/project-srinivaspackaging.jpeg',
     link: 'https://srinivaspackaging.in',
   },
 ];
@@ -129,32 +123,47 @@ export default function Home() {
   const caseStudiesRef = useScrollReveal();
 
   const cms = useCMSData();
-  const dynamicServices = cms.services || [];
   const dynamicWork = cms.workItems || [];
   const sections = cms.sections || [];
+
+  // A section is shown unless the admin explicitly disabled it
+  const isOn = (key) => sections.find((s) => s.sectionKey === key)?.enabled !== false;
 
   const heroSec = sections.find((s) => s.sectionKey === 'hero');
   const capabilitiesSec = sections.find((s) => s.sectionKey === 'capabilities');
   const workSec = sections.find((s) => s.sectionKey === 'selected_work');
 
-  const capabilitiesList = (dynamicServices.length > 0
-    ? dynamicServices.slice(0, 5).map((s, idx) => ({
-        id: `0${idx + 1}`,
-        title: s.title,
-        category: s.category,
-        description: s.shortDescription || s.tagline || s.description,
-        image: s.image?.src || defaultCapabilities[idx % defaultCapabilities.length].image,
-        link: `/services/${s.slug}`,
-      }))
-    : defaultCapabilities.slice(0, 5));
+  // The three service pillars shown in the capabilities tabs
+  const capabilitiesList = PILLAR_TABS;
+
+  const caseStudiesList = (cms.caseStudies || []).map((c, idx) => ({
+    id: c.number || String(idx + 1).padStart(2, '0'),
+    client: c.client,
+    category: c.category,
+    title: c.title,
+    description: c.subtitle || c.summary,
+    slug: c.slug,
+    link: `/case-studies/${c.slug}`,
+    image: c.image || c.coverBanner,
+  }));
 
   const selectedProjects = dynamicWork.length > 0 ? dynamicWork.map((w, idx) => ({
     title: w.title,
     category: w.category,
+    description: w.description || defaultProjects.find((d) => d.title === w.title)?.description,
     tags: w.tags || ['Next.js', 'React'],
     image: w.image || defaultProjects[idx % defaultProjects.length].image,
     link: w.liveUrl || defaultProjects[idx % defaultProjects.length].link,
   })) : defaultProjects;
+
+  const showcaseItems = selectedProjects.map((p) => ({
+    name: p.title,
+    designation: p.category,
+    quote: p.description || '',
+    tags: p.tags,
+    src: p.image,
+    link: p.link,
+  }));
 
   return (
     <main>
@@ -164,51 +173,47 @@ export default function Home() {
         subtitle={heroSec?.subheading}
         primaryCtaText={heroSec?.ctaPrimaryLabel}
         secondaryCtaText={heroSec?.ctaSecondaryLabel}
+        primaryCtaUrl={heroSec?.ctaPrimaryUrl}
+        secondaryCtaUrl={heroSec?.ctaSecondaryUrl}
       />
 
-      {/* 2. Tech Stack Marquee */}
-      <LogoCloud />
 
       {/* 3. Capabilities Overview ("What We Do") */}
       <section className="section" ref={capabilitiesRef}>
         <div className="container reveal">
           <SectionHeading>
-            <h2 className="section-title">{capabilitiesSec?.heading || "What We Do"}</h2>
+            <h2 className="section-title">{capabilitiesSec?.heading || "Create. Grow. Build."}</h2>
           </SectionHeading>
 
           <p style={{ maxWidth: '650px', color: 'var(--text-body)', fontSize: '1.1rem', marginBottom: 'var(--space-2xl)', lineHeight: 1.6 }}>
-            {capabilitiesSec?.description || "We design, build, and support software products, web applications, and automated workflows."}
+            {capabilitiesSec?.description || "Three ways we help businesses move forward, from the first creative idea to stronger digital visibility and the technology behind it."}
           </p>
 
           <VerticalTabs services={capabilitiesList} />
 
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'var(--space-2xl)' }}>
             <NoiseButton href={capabilitiesSec?.ctaUrl || "/services"} icon={<ArrowRight size={16} strokeWidth={1.75} aria-hidden="true" />}>
-              {capabilitiesSec?.ctaLabel || "Explore All Services"}
+              {capabilitiesSec?.ctaLabel || "Explore Our Services"}
             </NoiseButton>
           </div>
         </div>
       </section>
 
-      {/* 4. Marquee Capability Strip */}
-      <MarqueeTicker />
+      {/* 4. Tools and Technologies */}
+      {isOn('tech_cloud') && <TechOrbit />}
 
       {/* 5. Selected Work */}
       <section className="section" ref={workRef}>
         <div className="container reveal">
           <SectionHeading>
-            <h2 className="section-title">{workSec?.heading || "Selected Work"}</h2>
+            <h2 className="section-title">{workSec?.heading || "Work That Speaks for Itself."}</h2>
           </SectionHeading>
 
           <p style={{ maxWidth: '650px', color: 'var(--text-body)', fontSize: '1.1rem', marginBottom: 'var(--space-xl)', lineHeight: 1.6 }}>
-            {workSec?.description || "A selection of software products, platforms, and digital experiences we've worked on."}
+            {workSec?.description || "Explore the creative projects, digital experiences and platforms we've worked on."}
           </p>
 
-          <div className="portfolio-grid">
-            {selectedProjects.map((project, i) => (
-              <PortfolioCard key={`proj-${project.title}-${project.image}-${i}`} {...project} index={i} />
-            ))}
-          </div>
+          <ProjectShowcase testimonials={showcaseItems} />
 
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'var(--space-2xl)' }}>
             <NoiseButton href={workSec?.ctaUrl || "/portfolio"} icon={<ArrowRight size={16} strokeWidth={1.75} aria-hidden="true" />}>
@@ -218,14 +223,17 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 5b. Client logos */}
+      <LogoCloudSwap />
+
       {/* 6. Featured Case Studies */}
       <section className="section" ref={caseStudiesRef}>
         <div className="container reveal">
           <SectionHeading>
-            <h2 className="section-title">Case Studies</h2>
+            <h2 className="section-title">The Thinking Behind the Work.</h2>
           </SectionHeading>
 
-          <HomeCaseStudies />
+          {caseStudiesList.length > 0 ? <HomeCaseStudies studies={caseStudiesList.slice(0, 6)} /> : <HomeCaseStudies />}
 
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'var(--space-2xl)' }}>
             <NoiseButton href="/case-studies" icon={<ArrowRight size={16} strokeWidth={1.75} aria-hidden="true" />}>
@@ -235,17 +243,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 7. How We Work */}
-      <ProcessSteps />
-
       {/* 7. Why Ideate X */}
-      <WhyUs />
+      {isOn('why_us') && <WhyUs />}
 
       {/* 8. FAQs */}
-      <FAQAccordion />
+      {isOn('faqs') && <FAQAccordion />}
 
       {/* 9. Final CTA */}
-      <CTABanner />
+      {isOn('cta') && <CTABanner />}
     </main>
   );
 }

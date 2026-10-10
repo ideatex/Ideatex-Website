@@ -52,7 +52,7 @@ export default function PrivacyPage() {
               <h2 className="legal-section-title">Introduction & Scope</h2>
             </div>
             <p className="legal-text">
-              Ideate X (&ldquo;we,&rdquo; &ldquo;our,&rdquo; or &ldquo;us&rdquo;) is dedicated to safeguarding the privacy of our website visitors, clients, and partners. This Privacy Policy outlines our practices concerning the collection, usage, processing, and protection of personal data and confidential client materials when interacting with our website, software engineering services, and digital solutions.
+              Ideate X (&ldquo;we,&rdquo; &ldquo;our,&rdquo; or &ldquo;us&rdquo;) is dedicated to safeguarding the privacy of our website visitors, clients, and partners. This Privacy Policy outlines our practices concerning the collection, usage, processing, and protection of personal data and confidential client materials when interacting with our website, product engineering services, and digital solutions.
             </p>
             <div className="legal-callout">
               <p>
@@ -67,7 +67,7 @@ export default function PrivacyPage() {
               <h2 className="legal-section-title">Information We Collect</h2>
             </div>
             <p className="legal-text">
-              We collect information strictly necessary to communicate with you and deliver custom software engineering services:
+              We collect information strictly necessary to communicate with you and deliver custom apps engineering services:
             </p>
             <ul className="legal-list">
               <li>
@@ -91,7 +91,7 @@ export default function PrivacyPage() {
               We use collected information solely for legitimate business and engineering operations:
             </p>
             <ul className="legal-list">
-              <li>Delivering, scoping, and executing contracted software development, SaaS architecture, and design services.</li>
+              <li>Delivering, scoping, and executing contracted product development, SaaS architecture, and design services.</li>
               <li>Responding to project inquiries, generating accurate proposals, and providing ongoing technical support.</li>
               <li>Fulfilling billing, invoicing, and contractual obligations.</li>
               <li>Protecting the integrity, performance, and security of our digital platforms and client repositories.</li>

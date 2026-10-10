@@ -14,26 +14,43 @@ export async function GET() {
   const caseStudies = db.case_studies || [];
   const insights = db.insights || [];
 
-  // Run automated SEO audit
+  // Run automated on-page SEO audit
   const warnings = [];
+  const add = (entity, item, issue, level, url) =>
+    warnings.push({ entity, name: item.title, issue, level, id: item.id, url });
 
-  pages.forEach((p) => {
-    if (!p.seoTitle) warnings.push({ entity: 'Page', name: p.title, issue: 'Missing SEO Title', level: 'warning', id: p.id, url: `/${p.slug === 'home' ? '' : p.slug}` });
-    if (!p.seoDescription) warnings.push({ entity: 'Page', name: p.title, issue: 'Missing Meta Description', level: 'warning', id: p.id, url: `/${p.slug === 'home' ? '' : p.slug}` });
-    if (!p.ogImage) warnings.push({ entity: 'Page', name: p.title, issue: 'Missing OpenGraph Social Image', level: 'notice', id: p.id, url: `/${p.slug === 'home' ? '' : p.slug}` });
+  const titleCounts = {};
+  [...pages, ...services, ...caseStudies, ...insights].forEach((i) => {
+    if (i.seoTitle) titleCounts[i.seoTitle.trim().toLowerCase()] = (titleCounts[i.seoTitle.trim().toLowerCase()] || 0) + 1;
   });
 
+  const audit = (entity, item, url, { requireOg = true } = {}) => {
+    const title = (item.seoTitle || '').trim();
+    const desc = (item.seoDescription || '').trim();
+    if (!title) add(entity, item, 'Missing SEO Title', 'warning', url);
+    else {
+      if (title.length > 65) add(entity, item, `SEO Title too long (${title.length}/65) — will be truncated in search results`, 'notice', url);
+      if (title.length < 30) add(entity, item, `SEO Title too short (${title.length} chars)`, 'notice', url);
+      if (titleCounts[title.toLowerCase()] > 1) add(entity, item, 'Duplicate SEO Title used on another page', 'warning', url);
+    }
+    if (!desc) add(entity, item, 'Missing Meta Description', 'warning', url);
+    else if (desc.length > 165) add(entity, item, `Meta Description too long (${desc.length}/165)`, 'notice', url);
+    else if (desc.length < 70) add(entity, item, `Meta Description too short (${desc.length} chars)`, 'notice', url);
+    if (requireOg && !item.ogImage) add(entity, item, 'Missing OpenGraph Social Image', 'notice', url);
+    if (!item.slug) add(entity, item, 'Missing URL slug', 'warning', url);
+    else if (!/^[a-z0-9-]+$/.test(item.slug)) add(entity, item, 'Slug should be lowercase letters, numbers and hyphens only', 'notice', url);
+  };
+
+  pages.forEach((p) => audit('Page', p, `/${p.slug === 'home' ? '' : p.slug}`));
   services.forEach((s) => {
-    if (!s.seoTitle) warnings.push({ entity: 'Service', name: s.title, issue: 'Missing Custom SEO Title', level: 'notice', id: s.id, url: `/services/${s.slug}` });
-    if (!s.seoDescription) warnings.push({ entity: 'Service', name: s.title, issue: 'Missing Custom Meta Description', level: 'notice', id: s.id, url: `/services/${s.slug}` });
-    if (!s.image?.alt) warnings.push({ entity: 'Service', name: s.title, issue: 'Service Image Missing Alt Text', level: 'warning', id: s.id, url: `/services/${s.slug}` });
+    audit('Service', s, `/services/${s.slug}`);
+    if (!s.image?.alt) add('Service', s, 'Service Image Missing Alt Text', 'warning', `/services/${s.slug}`);
   });
-
-  insights.forEach((i) => {
-    if (!i.seoTitle) warnings.push({ entity: 'Insight', name: i.title, issue: 'Missing SEO Title', level: 'notice', id: i.id, url: `/blog/${i.slug}` });
-    if (!i.seoDescription) warnings.push({ entity: 'Insight', name: i.title, issue: 'Missing Meta Description', level: 'notice', id: i.id, url: `/blog/${i.slug}` });
+  caseStudies.forEach((c) => {
+    audit('Case Study', c, `/case-studies/${c.slug}`);
+    if (c.image && typeof c.image === 'object' && !c.image.alt) add('Case Study', c, 'Case Study Image Missing Alt Text', 'warning', `/case-studies/${c.slug}`);
   });
-
+  insights.forEach((i) => audit('Insight', i, `/blog/${i.slug}`));
   return NextResponse.json({
     seo_metadata: db.seo_metadata || {},
     warnings,

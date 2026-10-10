@@ -19,7 +19,7 @@ export default function TechStackDock({ techStack = [], title = "Technologies" }
     label: tool,
     icon: (
       <ToolDockTile>
-        <TechIcon name={tool} size={28} />
+        <TechIcon name={tool} size={28} onLight />
       </ToolDockTile>
     ),
   }));

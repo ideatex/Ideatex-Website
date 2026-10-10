@@ -33,26 +33,26 @@ export const steps = [
   {
     id: "1",
     name: "Step 1",
-    title: "Discovery & Blueprint",
-    description: "Understand the business requirement, user needs, and project scope. We map technical milestones, architecture requirements, and delivery roadmaps.",
+    title: "Understand",
+    description: "We learn about your business, your audience and what you want to achieve.",
   },
   {
     id: "2",
     name: "Step 2",
-    title: "Architecture & UX Design",
-    description: "Plan product scope, UI/UX design systems, and resilient cloud architectures. Craft high-fidelity interactive prototypes before coding.",
+    title: "Plan",
+    description: "We identify the right approach, set priorities and agree on the work ahead.",
   },
   {
     id: "3",
     name: "Step 3",
-    title: "High-Velocity Engineering",
-    description: "Write clean, type-safe, maintainable code with continuous integration. Implement rigorous QA testing and performance benchmarks.",
+    title: "Create & Build",
+    description: "We bring the plan to life through creative production, marketing or development.",
   },
   {
     id: "4",
     name: "Step 4",
-    title: "Production Launch & Scale",
-    description: "Deploy to production infrastructure with monitoring, observability, and post-launch support to scale your digital product smoothly.",
+    title: "Refine",
+    description: "We review the work, make improvements and prepare it for its intended use.",
   },
 ];
 
@@ -269,11 +269,11 @@ const defaultClasses = {
 const defaultImageSet = {
   step1img1: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=800&auto=format&q=80&fit=crop", // Discovery Blueprint & Wireframing
   step1img2: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&auto=format&q=80&fit=crop", // Strategic Tech Roadmap Planning
-  step2img1: "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=800&auto=format&q=80&fit=crop", // UI Design System & Component Library
+  step2img1: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&auto=format&q=80&fit=crop", // UI Design System & Component Library
   step2img2: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=800&auto=format&q=80&fit=crop", // Architecture & Interactive Prototype
-  step3img: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1000&auto=format&q=80&fit=crop",  // High-Velocity Engineering & Code IDE
+  step3img: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=1000&auto=format&q=80&fit=crop",  // High-Velocity Engineering & Code IDE
   step4img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1000&auto=format&q=80&fit=crop",  // Production Launch Telemetry & Cloud Analytics
-  alt: "Ideate X Software Engineering Delivery Process",
+  alt: "Ideate X Product Engineering Delivery Process",
 };
 
 export function FeatureCarousel({
@@ -333,8 +333,8 @@ export function FeatureCarousel({
 }
 
 export default function ProcessSteps({
-  title = "How We Work",
-  subtitle = "A straightforward, milestone-driven process from discovery to production launch.",
+  title = "Good Work Starts With the Right Questions.",
+  subtitle = "Four steps from the first conversation to the finished work.",
   customSteps = steps,
   image = defaultImageSet,
   className = "",

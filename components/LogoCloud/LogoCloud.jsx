@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useScrollReveal } from "../../hooks/useScrollReveal";
+import { TechIcon } from "../TechIcon/TechIcon";
 
 const techItems = [
   "Next.js",
@@ -63,6 +64,7 @@ export default function LogoCloud({
         <div className="logo-cloud-track">
           {[...techItems, ...techItems, ...techItems].map((name, i) => (
             <div key={i} className="logo-cloud-item">
+              <TechIcon name={name} size={26} />
               <span>{name}</span>
             </div>
           ))}

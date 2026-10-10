@@ -9,6 +9,12 @@ export default function SEOFields({ values = {}, onChange }) {
   const ogImage = values.ogImage || "";
   const canonicalUrl = values.canonicalUrl || "";
 
+  const focusKeyword = values.focusKeyword || "";
+  const norm = (s) => String(s || "").toLowerCase().replace(/&/g, "and");
+  const kw = norm(focusKeyword).trim();
+  const kwInTitle = kw && norm(seoTitle).includes(kw);
+  const kwInDesc = kw && norm(seoDescription).includes(kw);
+
   const titleLen = seoTitle.length;
   const descLen = seoDescription.length;
 
@@ -32,6 +38,26 @@ export default function SEOFields({ values = {}, onChange }) {
         <p style={{ margin: "4px 0 0", fontSize: "0.75rem", color: "var(--admin-text-muted)" }}>
           Configure how this page appears on Google search results and social media cards.
         </p>
+      </div>
+
+      <div className="admin-form-group">
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <label className="admin-form-label">Focus Keyword (the phrase this page should rank for)</label>
+          {kw && (
+            <span style={{ fontSize: "0.75rem", color: kwInTitle && kwInDesc ? "var(--admin-success)" : "var(--admin-danger)" }}>
+              {kwInTitle && kwInDesc
+                ? "Keyword found in title and description"
+                : `Keyword missing from ${!kwInTitle && !kwInDesc ? "title and description" : !kwInTitle ? "title" : "description"}`}
+            </span>
+          )}
+        </div>
+        <input
+          type="text"
+          className="admin-input"
+          placeholder="e.g. mobile app development company in Chennai"
+          value={focusKeyword}
+          onChange={(e) => onChange("focusKeyword", e.target.value)}
+        />
       </div>
 
       <div className="admin-form-group">

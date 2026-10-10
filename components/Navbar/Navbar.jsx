@@ -1,13 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Menu, X, ArrowUpRight } from "lucide-react";
-import { NoiseButton } from "../ui/NoiseButton";
+import ImmersiveFullscreenNav from "../ui/immersive-fullscreen-nav";
 import Logo from "../Logo/Logo";
 import { useCMSData } from "../../lib/cms-client";
-import "./Navbar.css";
+import { COMPANY_DETAILS } from "../../constants/contactInfo";
 
 const defaultNavLinks = [
   { path: "/portfolio", label: "Work" },
@@ -15,131 +13,50 @@ const defaultNavLinks = [
   { path: "/case-studies", label: "Case Studies" },
   { path: "/blog", label: "Insights" },
   { path: "/about", label: "About" },
-  { path: "/contact", label: "Contact" },
 ];
 
+const NAV_IMAGES = [
+  "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=900&h=640&auto=format&q=75&fit=crop",
+  "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=900&h=640&auto=format&q=75&fit=crop",
+];
+const SOCIAL_TYPES = ["instagram", "facebook", "twitter", "linkedin"];
+
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const pathname = usePathname();
   const cms = useCMSData();
 
-  const navLinks = (cms.navigation?.header && cms.navigation.header.length > 0)
-    ? cms.navigation.header.map((item) => ({ path: item.url, label: item.label }))
-    : defaultNavLinks;
+  const navLinks =
+    cms.navigation?.header && cms.navigation.header.length > 0
+      ? cms.navigation.header.map((item) => ({ path: item.url, label: item.label }))
+      : defaultNavLinks;
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const socialLinks = cms.settings?.socialLinks || {};
+  const socials = SOCIAL_TYPES.filter((type) => socialLinks[type]).map((type) => ({ type, href: socialLinks[type] }));
 
-  useEffect(() => {
-    setIsOpen(false);
-  }, [pathname]);
+  const { city, country } = COMPANY_DETAILS.address;
 
   return (
-    <header className={`navbar-header-root ${scrolled ? "is-scrolled" : ""}`}>
-      <nav
-        className="navbar-glass-container"
-        aria-label="Main Navigation"
-      >
-        <div className="navbar-glass-inner">
-          {/* Brand logo */}
-          <Link
-            href="/"
-            className="navbar-brand-link"
-            aria-label="Ideate X Home"
-          >
-            <Logo size={26} showText={true} />
-          </Link>
-
-          {/* Center nav links */}
-          <ul className="navbar-center-links">
-            {navLinks.map(({ path, label }) => {
-              const isActive =
-                path === "/"
-                  ? pathname === "/"
-                  : pathname.startsWith(path);
-              return (
-                <li key={path} className="navbar-link-li">
-                  <Link
-                    href={path}
-                    className={`navbar-nav-item ${isActive ? "active" : ""}`}
-                  >
-                    {label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-
-          {/* Right Area: Glassy CTA Button + Mobile Toggle */}
-          <div className="navbar-right-cluster">
-            <div className="navbar-cta-desktop">
-              <NoiseButton
-                href="/contact"
-                icon={<ArrowUpRight size={16} strokeWidth={1.75} aria-hidden="true" />}
-                className="navbar-glass-btn"
-              >
-                Start a Project
-              </NoiseButton>
-            </div>
-
-            <button
-              type="button"
-              className="navbar-mobile-toggle-btn"
-              onClick={() => setIsOpen(!isOpen)}
-              aria-label={isOpen ? "Close menu" : "Open menu"}
-              aria-expanded={isOpen}
-            >
-              {isOpen ? (
-                <X size={20} strokeWidth={1.75} aria-hidden="true" />
-              ) : (
-                <Menu size={20} strokeWidth={1.75} aria-hidden="true" />
-              )}
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Mobile Glassy Dropdown Menu */}
-      {isOpen && (
-        <div className="navbar-mobile-dropdown">
-          <ul className="navbar-mobile-links-list">
-            {navLinks.map(({ path, label }) => {
-              const isActive =
-                path === "/"
-                  ? pathname === "/"
-                  : pathname.startsWith(path);
-              return (
-                <li key={path}>
-                  <Link
-                    href={path}
-                    onClick={() => setIsOpen(false)}
-                    className={`navbar-mobile-link-item ${isActive ? "active" : ""}`}
-                  >
-                    {label}
-                  </Link>
-                </li>
-              );
-            })}
-            <li className="navbar-mobile-cta-wrap">
-              <NoiseButton
-                href="/contact"
-                onClick={() => setIsOpen(false)}
-                icon={<ArrowUpRight size={16} strokeWidth={1.75} aria-hidden="true" />}
-                className="navbar-mobile-glass-btn"
-              >
-                Start a Project
-              </NoiseButton>
-            </li>
-          </ul>
-        </div>
-      )}
-    </header>
+    <ImmersiveFullscreenNav
+      brand={
+        <Link href="/" aria-label="Ideate X Home">
+          <Logo size={64} showText={true} />
+        </Link>
+      }
+      navConfig={{
+        clipOrigin: "bottom",
+        overlayBg: "var(--bg-primary)",
+        headerOpenColor: "#ffffff",
+        openDuration: 1.2,
+        closeDuration: 1.2,
+      }}
+      navContent={{
+        agencyName: "",
+        tagline: "Create. Grow. Build.",
+        location: `${city}, ${country}`,
+        links: navLinks.map(({ path, label }) => ({ href: path, label })),
+        images: NAV_IMAGES,
+        socials,
+      }}
+    />
   );
 }
 

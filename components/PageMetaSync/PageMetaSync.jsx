@@ -16,8 +16,8 @@ export default function PageMetaSync() {
 
     const pages = cms.pages || [];
     const globalSeo = cms.seo || {};
-    const defaultGlobalTitle = globalSeo.defaultTitle || "Ideate X — Software, Products & Digital Growth";
-    const defaultGlobalDesc = globalSeo.defaultDescription || "We design, build and grow software products, digital platforms and business systems.";
+    const defaultGlobalTitle = globalSeo.defaultTitle || "Ideate X — Apps, Products & Digital Growth";
+    const defaultGlobalDesc = globalSeo.defaultDescription || "We design, build and grow digital products, digital platforms and business systems.";
 
     // 1. Homepage
     if (pathname === "/" || pathname === "/home") {

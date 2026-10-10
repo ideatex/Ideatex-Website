@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+import { notifyEnquiry } from '@/lib/mailer';
+import { saveEnquiry, clean, isRateLimited } from '@/lib/enquiry';
 
 function validateContactForm(data) {
   const errors = [];
@@ -38,46 +40,51 @@ function validateContactForm(data) {
 
 export async function POST(request) {
   try {
+    if (isRateLimited(request, 'contact')) {
+      return NextResponse.json({ success: false, error: 'Too many submissions. Please try again in a few minutes.' }, { status: 429 });
+    }
+
     const body = await request.json();
-    const { name, email, phone, message, projectType } = body;
-    
+
+    // Honeypot: bots fill hidden fields. Pretend success without saving.
+    if (body.website) {
+      return NextResponse.json({ success: true, message: 'Thank you for your message.' });
+    }
+
     const errors = validateContactForm(body);
     if (errors.length > 0) {
       return NextResponse.json({ success: false, errors }, { status: 400 });
     }
 
-    const submission = {
-      type: 'contact',
-      name: name.trim(),
-      email: email.trim().toLowerCase(),
-      phone: phone && typeof phone === 'string' && phone.trim() !== '' ? phone.trim() : null,
-      company: '',
-      service: Array.isArray(projectType) ? projectType.join(', ') : 'General Enquiry',
-      message: message.trim(),
-      source: 'Website Contact Page',
-      status: 'new',
-      internalNotes: '',
-      createdAt: new Date().toISOString()
-    };
+    const projectTypes = Array.isArray(body.projectType) ? body.projectType.map((t) => clean(t, 60)).filter(Boolean) : [];
 
-    let leadRecord = null;
+    let lead;
     try {
-      const { insertItem } = await import('@/lib/cms-db');
-      leadRecord = insertItem('enquiries', submission);
+      lead = saveEnquiry({
+        type: 'contact',
+        name: clean(body.name, 100),
+        email: clean(body.email, 254).toLowerCase(),
+        phone: body.phone ? clean(body.phone, 30) : '',
+        service: projectTypes.length ? projectTypes.join(', ') : 'General Enquiry',
+        message: clean(body.message, 5000),
+        source: 'Website Contact Page',
+        internalNotes: '',
+      });
     } catch (e) {
-      console.warn('CMS DB insert error, continuing:', e);
+      // Never report success if the lead was not stored
+      console.error('Contact form: failed to save enquiry:', e);
+      return NextResponse.json({ success: false, error: 'We could not save your message. Please try again or email us directly.' }, { status: 500 });
     }
 
-    console.log('✅ Contact form lead received & saved to CMS:', submission);
+    await notifyEnquiry(lead);
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       message: 'Thank you for your message. We will get back to you within 24 hours.',
-      leadId: leadRecord?.id || `LEAD-${Date.now()}`
+      leadId: lead.id,
     });
   } catch (error) {
     console.error('Contact form submission error:', error);
     return NextResponse.json({ success: false, error: 'Internal Server Error. Please try again later.' }, { status: 500 });
   }
 }
-
