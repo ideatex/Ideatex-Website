@@ -61,6 +61,7 @@ const serverJsContent = `const http = require('http');
 const path = require('path');
 const fs = require('fs');
 const url = require('url');
+const next = require('next');
 
 process.env.NODE_ENV = 'production';
 process.chdir(__dirname);
@@ -71,64 +72,68 @@ if (typeof(PhusionPassenger) !== 'undefined') {
 }
 
 const { serveStatic } = require('next/dist/server/serve-static');
-const NextServer = require('next/dist/server/next-server').default;
 const requiredServerFiles = JSON.parse(
   fs.readFileSync(path.join(__dirname, '.next', 'required-server-files.json'), 'utf-8')
 );
 const conf = requiredServerFiles.config;
 
-const nextServer = new NextServer({
-  hostname: 'localhost',
-  port: parseInt(process.env.PORT, 10) || 3000,
-  dir: __dirname,
+const app = next({
   dev: false,
-  customServer: false,
+  dir: __dirname,
   conf
 });
 
-const handler = nextServer.getRequestHandler();
+const handle = app.getRequestHandler();
 
-const server = http.createServer(async (req, res) => {
-  try {
-    const parsedUrl = url.parse(req.url, true);
-    const { pathname } = parsedUrl;
+app.prepare().then(() => {
+  const server = http.createServer(async (req, res) => {
+    try {
+      const parsedUrl = url.parse(req.url, true);
+      const { pathname } = parsedUrl;
 
-    // 1. Serve Next.js static assets (_next/static/*)
-    if (pathname.startsWith('/_next/static/')) {
-      const relPath = pathname.replace(/^\\/_next\\/static\\//, '');
-      const filePath = path.join(__dirname, '.next', 'static', relPath);
-      if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-        await serveStatic(req, res, filePath);
-        return;
+      // 1. Direct serve Next.js static assets (_next/static/*)
+      if (pathname.startsWith('/_next/static/')) {
+        const relPath = pathname.replace(/^\\/_next\\/static\\//, '');
+        const filePath = path.join(__dirname, '.next', 'static', relPath);
+        if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+          await serveStatic(req, res, filePath);
+          return;
+        }
+      }
+
+      // 2. Direct serve static files from public/ (except _next and api routes)
+      if (pathname !== '/' && !pathname.startsWith('/_next/') && !pathname.startsWith('/api/')) {
+        const publicFilePath = path.join(__dirname, 'public', pathname.replace(/^\\//, ''));
+        if (fs.existsSync(publicFilePath) && fs.statSync(publicFilePath).isFile()) {
+          await serveStatic(req, res, publicFilePath);
+          return;
+        }
+      }
+
+      // 3. Delegate to Next.js handler (handles SSR, API routes, and /_next/image optimization!)
+      await handle(req, res, parsedUrl);
+    } catch (err) {
+      console.error('Server request error:', err);
+      if (!res.headersSent) {
+        res.statusCode = 500;
+        res.end('Internal Server Error');
       }
     }
-
-    // 2. Serve static files from public/
-    const publicFilePath = path.join(__dirname, 'public', pathname.replace(/^\\//, ''));
-    if (pathname !== '/' && fs.existsSync(publicFilePath) && fs.statSync(publicFilePath).isFile()) {
-      await serveStatic(req, res, publicFilePath);
-      return;
-    }
-
-    // 3. Delegate to NextServer handler for SSR and API routes
-    await handler(req, res);
-  } catch (err) {
-    console.error('Server request error:', err);
-    if (!res.headersSent) {
-      res.statusCode = 500;
-      res.end('Internal Server Error');
-    }
-  }
-});
-
-// Bind server for cPanel Phusion Passenger or standalone fallback
-if (typeof(PhusionPassenger) !== 'undefined') {
-  server.listen('passenger');
-} else {
-  server.listen(process.env.PORT || 3000, () => {
-    console.log(\`Server listening on port \${process.env.PORT || 3000}\`);
   });
-}
+
+  // Bind server for cPanel Phusion Passenger or standalone port fallback
+  if (typeof(PhusionPassenger) !== 'undefined') {
+    server.listen('passenger');
+  } else {
+    const port = parseInt(process.env.PORT, 10) || 3000;
+    server.listen(port, () => {
+      console.log(\`Server listening on port \${port}\`);
+    });
+  }
+}).catch((err) => {
+  console.error('Failed to start Next.js application:', err);
+  process.exit(1);
+});
 `;
 fs.writeFileSync(path.join(distCpanelDir, 'server.js'), serverJsContent, 'utf-8');
 console.log('✓ Created Passenger-compatible server.js');
