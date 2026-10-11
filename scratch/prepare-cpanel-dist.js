@@ -77,6 +77,20 @@ const requiredServerFiles = JSON.parse(
 );
 const conf = requiredServerFiles.config;
 
+// Ensure remotePatterns and domains are always properly configured
+if (!conf.images) conf.images = {};
+if (!conf.images.remotePatterns) conf.images.remotePatterns = [];
+if (!conf.images.remotePatterns.some((p) => p.hostname === 'images.unsplash.com')) {
+  conf.images.remotePatterns.push({
+    protocol: 'https',
+    hostname: 'images.unsplash.com',
+  });
+}
+if (!conf.images.domains) conf.images.domains = [];
+if (!conf.images.domains.includes('images.unsplash.com')) {
+  conf.images.domains.push('images.unsplash.com');
+}
+
 const app = next({
   dev: false,
   dir: __dirname,
@@ -89,7 +103,7 @@ app.prepare().then(() => {
   const server = http.createServer(async (req, res) => {
     try {
       const parsedUrl = url.parse(req.url, true);
-      const { pathname } = parsedUrl;
+      const { pathname, query } = parsedUrl;
 
       // 1. Direct serve Next.js static assets (_next/static/*)
       if (pathname.startsWith('/_next/static/')) {
@@ -110,7 +124,20 @@ app.prepare().then(() => {
         }
       }
 
-      // 3. Delegate to Next.js handler (handles SSR, API routes, and /_next/image optimization!)
+      // 3. Fast-path external images (e.g. Unsplash CDN) via 302 redirect
+      // Bypasses cPanel CageFS outbound firewall blocks & eliminates server CPU load
+      if (pathname === '/_next/image') {
+        const imageUrl = query.url;
+        if (typeof imageUrl === 'string' && (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'))) {
+          res.writeHead(302, {
+            Location: imageUrl,
+            'Cache-Control': 'public, max-age=86400, stale-while-revalidate=604800'
+          });
+          return res.end();
+        }
+      }
+
+      // 4. Delegate to Next.js handler (handles SSR, API routes, and local image optimization)
       await handle(req, res, parsedUrl);
     } catch (err) {
       console.error('Server request error:', err);
